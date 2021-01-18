@@ -1,0 +1,6 @@
+{
+  "apiKeys" : {
+    "darkSky": "YOUR_KEY_HERE",
+	"googleMaps": "YOUR_KEY_HERE"
+  }
+}
