@@ -13,13 +13,12 @@ module.exports = class GoogleMapsApi {
   
   async getGeocode(inputString) {
 	  try {
-		  const response = await fetch(this.geocodeHostname + inputString.trim().split(" ").join("+") + "&key=" + config.apiKeys.googleMaps, {
+		  let uri = this.geocodeHostname + inputString.trim().split(" ").join("+") + "&key=" + config.apiKeys.googleMaps;
+		  const response = await fetch(uri, {
 			  method: "GET",
 			  headers: this.headers
 		  });
-		  const data = await response.json();
-		  console.log('data', data);
-		  return data;
+		  return await response.json();
 	  } catch (e) {
 		  console.log('map err', e);
 		  return e;
@@ -35,7 +34,6 @@ module.exports = class GoogleMapsApi {
 	  
     const data = await this.getGeocode(address);
     if(data.status === 'OK'){
-	  console.log(data.results[0].geometry.location);
 	  const loc = data.results[0].geometry.location;
 	  const formattedAddress = data.results[0].formatted_address;
 	  let str = "```\n" + formattedAddress + " (User Input: " + address + ")\nLat: " + loc.lat + "\nLng: " + loc.lng + "\n```";
@@ -49,7 +47,6 @@ module.exports = class GoogleMapsApi {
 	let address = inputString.trim().split(" ");
 	address.shift();
 	address = address.join(" ");
-	console.log(address);
 	  
     const data = await this.getGeocode(address);
 	

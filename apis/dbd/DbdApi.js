@@ -15,8 +15,7 @@ module.exports = class DbdApi {
 			  method: this.method,
 			  headers: this.headers
 		  });
-		  const data = await response.json();
-		  return data;
+		  return await response.json();
 	  } catch (e) {
 		  return e;
 	}
@@ -25,7 +24,6 @@ module.exports = class DbdApi {
   async getShrine(cmd, fullCmd) {
 	this.endpoint = "/api/shrineofsecrets";
 	const data = await this.getDbdApiRequest();
-	//console.log('dbd', data.items[0].Name);
 	let str = "```diff\n"  +
 		"Todays's Shine of Secrets\n" +
 		"- " + data.items[0].Name + "\n" +
