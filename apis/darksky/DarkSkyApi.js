@@ -35,7 +35,7 @@ module.exports = class DarkSkyApi {
 	  "[Summary] " + getForecastJson.currently.summary + "\n" +
 	  "[Currently] " + getForecastJson.currently.temperature + " F\n" +
 	  "[Feels Like] " + getForecastJson.currently.apparentTemperature + " F\n" +
-		"[High/Low] " + getForecastJson.daily.data.temperatureHigh + " / " + getForecastJson.daily.data.temperatureLow + " F\n" +
+		"[High/Low] " + getForecastJson.daily.data[0].temperatureHigh + " / " + getForecastJson.daily.data[0].temperatureLow + " F\n" +
 	  "[Precip %] " + getForecastJson.currently.precipProbability + "\n" +
 	  "[Humidity] " + getForecastJson.currently.humidity + "\n" +
 	  "[Wind Speed] " + getForecastJson.currently.windSpeed + "\n" +
