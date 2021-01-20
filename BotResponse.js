@@ -31,11 +31,18 @@ module.exports = class BotResponse {
 
       let msgContent = msg.content;
       if (msgContent === '!ping') {
-          msg.reply(config);
+          msg.reply("ping\tping\tping\nping");
       }
       else if (msgContent.includes('!weather')) {
           const coord = await this.googleMapsApi.getCoordinates(msgContent);
           let data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+          msg.reply(
+              data
+          );
+      }
+      else if (msgContent.includes('!hourly-w')) {
+          const coord = await this.googleMapsApi.getCoordinates(msgContent);
+          let data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
           msg.reply(
               data
           );

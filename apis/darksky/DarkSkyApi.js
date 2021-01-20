@@ -1,6 +1,7 @@
 const https = require('https');
 const fetch = require("node-fetch");
 const config = require("../../config.json");
+const dateFormat = require('dateformat');
 
 module.exports = class DarkSkyApi {
   constructor() {
@@ -42,5 +43,22 @@ module.exports = class DarkSkyApi {
 	  "```";
 	return str;
   }
+
+	async getHourlyForecast(latLongStr, formattedAddress) {
+	  const getForecastJson = await this.getForecast(latLongStr);
+		let str = "```ini\n" + formattedAddress + "\n";
+		str += "\tDateTime\t\t\tTemp\t\t\tPreip%\tHumidity\tWindSpd\t\tSummary\n";
+		const hourlyData = getForecastJson.hourly.data;
+		if (hourlyData) {
+			for (let i = 0; i < 12; i++) {
+				str += dateFormat(new Date(hourlyData[i].time * 1000), "mm/dd/yy HH:MM Z") + 
+					"\t\t" + hourlyData[i].temperature.toFixed(2) + " F \t\t" + hourlyData[i].precipProbability.toFixed(2) +
+					"\t\t" + hourlyData[i].humidity.toFixed(2) + "\t\t" + hourlyData[i].windSpeed.toFixed(2) +
+					"\t\t" + hourlyData[i].summary.trim() +"\n";
+			}
+			str += "```";
+			return str;
+        }
+    }
 
 }
