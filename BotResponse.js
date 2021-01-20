@@ -88,7 +88,7 @@ module.exports = class BotResponse {
       }
       else if (msgContent.includes('!smite-match-history') || msgContent.includes("!smite-mh")) {
           console.log(
-              await this.hirezApi.getPlayerInfo(msgContent) 
+              await this.hirezApi.getMatchHistoryByPlayerName(msgContent) 
           );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);

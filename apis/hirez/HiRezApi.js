@@ -70,7 +70,7 @@ module.exports = class HiRezApi {
 		return str;
     }
 
-	async getPlayerInfo(inputString) {
+	async getMatchHistoryByPlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
 		playerName = playerName.join(" ");
