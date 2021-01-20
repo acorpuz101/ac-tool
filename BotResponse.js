@@ -91,12 +91,12 @@ module.exports = class BotResponse {
               await this.hirezApi.getMatchHistoryByPlayerName(msgContent)
           );
       }
-      else if (msgContent.includes('!smite-god-ranks') || msgContent.includes("!smite-gr")) {
-          console.log(
-              await this.hirezApi.getGodRanks(msgContent)
+      else if (msgContent.includes('!smite-god-ranks') || msgContent.includes("!sgr")) {
+          msg.reply(
+              await this.hirezApi.getGodKdr(msgContent)
           );
       }
-      else if (msgContent.includes('!smite-kda-allgods') || msgContent.includes("!smite-kdag")) {
+      else if (msgContent.includes('!smite-kda-allgods') || msgContent.includes("!skda")) {
           msg.reply(
               await this.hirezApi.getKdrAcrossAllGods(msgContent)
           );

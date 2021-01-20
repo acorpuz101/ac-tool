@@ -95,6 +95,27 @@ module.exports = class HiRezApi {
 		return godRanks;
 	}
 
+	async getGodKdr(inputString) {
+		let playerName = inputString.trim().split(" ");
+		playerName.shift();
+		playerName = playerName.join(" ");
+
+		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+
+		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
+
+		const dataLength = 10;
+		for (let i = 0; i < dataLength; i++) {
+			const godData = godRanks[i];
+			const kda = godData.Kills.toString() + "/" + godData.Deaths.toString() + "/" + godData.Assists.toString();
+			const wl = godData.Wins.toString() + " : " + godData.Losses.toString();
+			str += godData.god.padEnd("12", " ") + "\t" + kda.padEnd("12", " ") + "\t" + wl + "\n";
+        }
+		str += "```"
+
+		return str;
+    }
+
 	async getKdrAcrossAllGods(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
@@ -105,19 +126,28 @@ module.exports = class HiRezApi {
 		let godKill = 0;
 		let godDeath = 0;
 		let godAssist = 0;
+		let godWin = 0;
+		let godLosses = 0;
 		for (let i = 0; i < godRanks.length; i++) {
 			let god = godRanks[i];
 			godKill += god.Kills;
 			godDeath += god.Deaths;
 			godAssist += god.Assists;
+			godWin += god.Wins;
+			godLosses += god.Losses;
 		}
 
-		let kdr = (godKill / godAssist).toFixed(4)*100
+		let kdar = (godKill + godAssist) / godDeath;
+		let kdr = (godKill / godDeath);
+		let wl = (godWin / godLosses);
 
-		const kda = "```\n" + playerName + "\nK / D / A\n"
-			+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n"
-			+ "KDR: " + kdr.toString() + " %\n"
-				+ "```";
+		const kda = "```\n" + playerName + "\n\nK / D / A\n"
+			+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n\n"
+			+ "K/D: " + kdr.toFixed(2).toString() + "\n"
+			+ "K/D/A: " + kdar.toFixed(2).toString() + "\n\n"
+			+ "Wins / Losses\n" + godWin.toString() + " / " + godLosses.toString() + "\n\n"
+			+ "W/L: " + wl.toFixed(2).toString() + "\n"
+			+ "```";
 
 		return kda;
     }
