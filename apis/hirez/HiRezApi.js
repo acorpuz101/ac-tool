@@ -18,6 +18,24 @@ module.exports = class HiRezApi {
 		return this.hiRezSession.createTimestamp();
 	}
 
+	async getPlayerInfo(inputString) {
+		let playerName = inputString.trim().split(" ");
+		playerName.shift();
+		playerName = playerName.join(" ");
+
+		const playerInfo = await this.hiRezSession.getPlayerInfo(playerName);
+		const player = playerInfo[0];
+		let str = "```\n" + player.hz_player_name + " - " + player.Team_Name + " - " + player.Region + "\n\n" +
+			"Stats:\n" + "\t" + "Wins:".padEnd("15", " ") + player.Wins + "\n\t" + "Losses:".padEnd("15", " ") + player.Losses + "\n\t" +
+			"\n\t" + "Player Lvl:".padEnd("15", " ") + player.Level +
+			"\n\t" + "Mastery Lvl:".padEnd("15", " ") + player.MasteryLevel +
+			"\n\t" + "Hours Played:".padEnd("15", " ") + player.HoursPlayed +
+			"```";
+			
+		console.log(playerName, playerInfo);
+		return str;
+    }
+
 	async getPlayerIdByName(name) {
 		const playerIds = await this.hiRezSession.getPlayerIdByName(name, 'getplayeridbyname');
 		console.log(name, playerIds);

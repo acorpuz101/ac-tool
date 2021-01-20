@@ -22,7 +22,12 @@ module.exports = class BotResponse {
         this.googleMapsApi = new GoogleMapsApi();
         this.darkSkyApi = new DarkSkyApi();
         this.hirezApi = new HiRezApi();
-  }
+        this.init();
+    }
+
+    async init() {
+        await this.hirezApi.createSession();
+    }
 
   async routeMessage(msg) {
       // Messages from the bot itself are ignored
@@ -66,13 +71,14 @@ module.exports = class BotResponse {
               await this.dbdApi.getShrine()
           );
       }
-      else if (msgContent === '!hr-connect') {
-          await this.hirezApi.createSession();
+      else if (msgContent.includes('!smite-playerInfo') || msgContent.includes('!smite-pi')) {
+          msg.reply(
+              await this.hirezApi.getPlayerInfo(msgContent)    
+          );
+      }
+      else if (msgContent === '!smite-server-status' || msgContent === "!smite-ss") {
           msg.reply(
               await this.hirezApi.statusOfServer() 
-          );
-          console.log(
-              await this.hirezApi.getPlayerIdByName("ryphex")    
           );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);
