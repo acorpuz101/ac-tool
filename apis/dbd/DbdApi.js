@@ -24,13 +24,14 @@ module.exports = class DbdApi {
   async getShrine(cmd, fullCmd) {
 	this.endpoint = "/api/shrineofsecrets";
 	const data = await this.getDbdApiRequest();
+	const date = new Date(data.endDate);
 	let str = "```diff\n"  +
 		"Todays's Shine of Secrets\n" +
 		"- " + data.items[0].Name + "\n" +
 		"- " + data.items[1].Name + "\n" +
 		"- " + data.items[2].Name + "\n" +
 		"- " + data.items[3].Name + "\n" +
-		"Ends: " + data.endDate +
+		"Ends: " + date.toLocaleDateString() + " " + date.toLocaleTimeString("en-US", { timeZone: "America/Chicago" }) +" CST\n" +
 		"```";
 	return str;
   }
