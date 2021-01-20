@@ -82,6 +82,15 @@ module.exports = class Session {
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
 		const resJson = res.json();
 		return resJson;
-    }
+	}
+
+	async getGodRanks(playerName, methodName = "getgodranks") {
+		const player = await this.getPlayerIdByName(playerName);
+		const playerId = player[0].player_id;
+		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
+		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
+		const resJson = res.json();
+		return resJson;
+	}
 
 }

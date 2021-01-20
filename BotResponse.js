@@ -88,7 +88,17 @@ module.exports = class BotResponse {
       }
       else if (msgContent.includes('!smite-match-history') || msgContent.includes("!smite-mh")) {
           console.log(
-              await this.hirezApi.getMatchHistoryByPlayerName(msgContent) 
+              await this.hirezApi.getMatchHistoryByPlayerName(msgContent)
+          );
+      }
+      else if (msgContent.includes('!smite-god-ranks') || msgContent.includes("!smite-gr")) {
+          console.log(
+              await this.hirezApi.getGodRanks(msgContent)
+          );
+      }
+      else if (msgContent.includes('!smite-kda-allgods') || msgContent.includes("!smite-kdag")) {
+          msg.reply(
+              await this.hirezApi.getKdrAcrossAllGods(msgContent)
           );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);

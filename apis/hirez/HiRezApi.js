@@ -23,8 +23,13 @@ module.exports = class HiRezApi {
 		playerName.shift();
 		playerName = playerName.join(" ");
 
+
 		const playerInfo = await this.hiRezSession.getPlayerInfo(playerName);
+
 		const player = playerInfo[0];
+		const playerWins = player.Wins;
+		const playerLosses = player.Losses;
+
 		let str = "```\n" + player.hz_player_name + " - " + player.Team_Name + " - " + player.Region + "\n\n" +
 			"Stats:\n" + "\t" + "Wins:".padEnd("15", " ") + player.Wins + "\n\t" + "Losses:".padEnd("15", " ") + player.Losses + "\n\t" +
 			"\n\t" + "Player Lvl:".padEnd("15", " ") + player.Level +
@@ -70,13 +75,50 @@ module.exports = class HiRezApi {
 		return str;
     }
 
+	// TODO: Parse
 	async getMatchHistoryByPlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
 		playerName = playerName.join(" ");
 
 		const matchHistory = await this.hiRezSession.getMatchHistory(playerName);
-
 		return matchHistory;
 	}
+
+	// TODO: Parse
+	async getGodRanks(inputString) {
+		let playerName = inputString.trim().split(" ");
+		playerName.shift();
+		playerName = playerName.join(" ");
+
+		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		return godRanks;
+	}
+
+	async getKdrAcrossAllGods(inputString) {
+		let playerName = inputString.trim().split(" ");
+		playerName.shift();
+		playerName = playerName.join(" ");
+
+		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+
+		let godKill = 0;
+		let godDeath = 0;
+		let godAssist = 0;
+		for (let i = 0; i < godRanks.length; i++) {
+			let god = godRanks[i];
+			godKill += god.Kills;
+			godDeath += god.Deaths;
+			godAssist += god.Assists;
+		}
+
+		let kdr = (godKill / godAssist).toFixed(4)*100
+
+		const kda = "```\n" + "K / D / A \n"
+			+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n"
+			+ "KDR: " + kdr.toString() + " %\n"
+				+ "```";
+
+		return kda;
+    }
 }
