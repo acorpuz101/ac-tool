@@ -114,7 +114,7 @@ module.exports = class HiRezApi {
 
 		let kdr = (godKill / godAssist).toFixed(4)*100
 
-		const kda = "```\n" + "K / D / A \n"
+		const kda = "```\n" + playerName + "\nK / D / A\n"
 			+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n"
 			+ "KDR: " + kdr.toString() + " %\n"
 				+ "```";
