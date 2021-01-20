@@ -61,4 +61,20 @@ module.exports = class DarkSkyApi {
         }
     }
 
+	async getEightDayForecast(latLongStr, formattedAddress) {
+		const getForecastJson = await this.getForecast(latLongStr);
+		let str = "```ini\n" + formattedAddress + "\n";
+		str += "\tDateTime\t\tTemp\t\t\tPreip%\tHumidity\tWindSpd\t\tSummary\n";
+		const dailyData = getForecastJson.daily.data;
+		if (dailyData) {
+			for (let i = 0; i < dailyData.length; i++) {
+				str += dateFormat(new Date(dailyData[i].time * 1000), "ddd mm/dd/yy") +
+					"\t\t" + dailyData[i].temperatureHigh.toFixed(2) + " F \t\t" + dailyData[i].precipProbability.toFixed(2) +
+					"\t\t" + dailyData[i].humidity.toFixed(2) + "\t\t" + dailyData[i].windSpeed.toFixed(2) +
+					"\t\t" + dailyData[i].summary.trim() + "\n";
+			}
+			str += "```";
+			return str;
+		}
+	}
 }

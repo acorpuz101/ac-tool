@@ -47,6 +47,13 @@ module.exports = class BotResponse {
               data
           );
       }
+      else if (msgContent.includes('!week-w')) {
+          const coord = await this.googleMapsApi.getCoordinates(msgContent);
+          let data = await this.darkSkyApi.getEightDayForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+          msg.reply(
+              data
+          );
+      }
       else if (msgContent.includes('!coord')) {
           msg.reply(
               await this.googleMapsApi.getFormattedCoordinates(msgContent)
