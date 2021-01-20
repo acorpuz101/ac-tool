@@ -32,14 +32,14 @@ module.exports = class DarkSkyApi {
 	const getForecastJson = await this.getForecast(latLongStr);
 	let str = "```ini\n" +
 	  formattedAddress + "\n" +
-	  new Date (getForecastJson.currently.time * 1000) + "\n" +
-	  "[Summary] " + getForecastJson.currently.summary + "\n" +
-	  "[Currently] " + getForecastJson.currently.temperature + " F\n" +
-	  "[Feels Like] " + getForecastJson.currently.apparentTemperature + " F\n" +
-		"[High/Low] " + getForecastJson.daily.data[0].temperatureHigh + "F / " + getForecastJson.daily.data[0].temperatureLow + " F\n" +
-	  "[Precip %] " + getForecastJson.currently.precipProbability + "\n" +
-	  "[Humidity] " + getForecastJson.currently.humidity + "\n" +
-	  "[Wind Speed] " + getForecastJson.currently.windSpeed + "\n" +
+		new Date(getForecastJson.currently.time * 1000) + "\n" +
+		"[Summary]".padEnd("12", ' ') + getForecastJson.currently.summary + "\n" +
+		"[Currently]".padEnd("12", ' ') + getForecastJson.currently.temperature + " F\n" +
+		"[Feels Like]".padEnd("12", ' ') + getForecastJson.currently.apparentTemperature + " F\n" +
+		"[High/Low]".padEnd("12", ' ') + getForecastJson.daily.data[0].temperatureHigh + "F / " + getForecastJson.daily.data[0].temperatureLow + " F\n" +
+		"[Precip %]".padEnd("12", ' ') + getForecastJson.currently.precipProbability + "\n" +
+		"[Humidity]".padEnd("12", ' ') + getForecastJson.currently.humidity + "\n" +
+		"[Wind Speed]".padEnd("12", ' ') + getForecastJson.currently.windSpeed + "\n" +
 	  "```";
 	return str;
   }
@@ -51,7 +51,7 @@ module.exports = class DarkSkyApi {
 		const hourlyData = getForecastJson.hourly.data;
 		if (hourlyData) {
 			for (let i = 0; i < 12; i++) {
-				str += dateFormat(new Date(hourlyData[i].time * 1000), "mm/dd/yy HH:MM Z") + 
+				str += dateFormat(new Date(hourlyData[i].time * 1000), "mm/dd/yy HH:MM Z").padEnd("15", ' ') + 
 					"\t\t" + hourlyData[i].temperature.toFixed(2) + " F \t\t" + hourlyData[i].precipProbability.toFixed(2) +
 					"\t\t" + hourlyData[i].humidity.toFixed(2) + "\t\t" + hourlyData[i].windSpeed.toFixed(2) +
 					"\t\t" + hourlyData[i].summary.trim() +"\n";
