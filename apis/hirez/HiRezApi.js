@@ -54,6 +54,18 @@ module.exports = class HiRezApi {
 		}
 		str += "```";
 		return str;
+	}
+
+	async getMotd() {
+		const motdJson = await this.hiRezSession.getMotd();
+		const motd = motdJson[0];
+
+		let str = "```\nSmite MOTD\n" +
+			motd.name + "\n" +
+			"Max Players: " + motd.name + "\n" +
+			"Description: " + motd.description.replace(/<li>/g, "\n\t").replace(/<\/li>/g, "") + "\n" +
+			"```";
+		return str;
     }
 
 }

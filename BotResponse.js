@@ -80,6 +80,11 @@ module.exports = class BotResponse {
           msg.reply(
               await this.hirezApi.statusOfServer() 
           );
+      }
+      else if (msgContent === '!smite-motd' || msgContent === "!smotd") {
+          msg.reply(
+              await this.hirezApi.getMotd() 
+          );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);
           msg.reply(msg.id);
