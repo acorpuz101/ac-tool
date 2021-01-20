@@ -12,6 +12,7 @@
     "dateformat": "^4.4.1",
     "discord": "^0.8.2",
     "discord.js": "^12.5.1",
+    "moment": "^2.29.1",
     "node-fetch": "^2.6.1"
   }
 }

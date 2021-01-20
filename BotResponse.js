@@ -6,6 +6,7 @@ const config = require("./config.json");
 const DbdApi = require('./apis/dbd/DbdApi');
 const GoogleMapsApi = require('./apis/googlemaps/GoogleMapsApi');
 const DarkSkyApi = require('./apis/darksky/DarkSkyApi');
+const HiRezApi = require('./apis/hirez/HiRezApi');
 
 const ADRIANS_ID = '179314473088188417';
 const ANNAS_ID = '181522225835409408';
@@ -20,6 +21,7 @@ module.exports = class BotResponse {
         this.dbdApi = new DbdApi();
         this.googleMapsApi = new GoogleMapsApi();
         this.darkSkyApi = new DarkSkyApi();
+        this.hirezApi = new HiRezApi();
   }
 
   async routeMessage(msg) {
@@ -62,6 +64,15 @@ module.exports = class BotResponse {
       else if (msgContent === '!dbd shrine') {
           msg.reply(
               await this.dbdApi.getShrine()
+          );
+      }
+      else if (msgContent === '!hr-connect') {
+          await this.hirezApi.createSession();
+          msg.reply(
+              await this.hirezApi.statusOfServer() 
+          );
+          console.log(
+              await this.hirezApi.getPlayerIdByName("ryphex")    
           );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);
