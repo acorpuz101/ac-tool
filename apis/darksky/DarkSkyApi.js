@@ -52,8 +52,8 @@ module.exports = class DarkSkyApi {
 		const hourlyData = getForecastJson.hourly.data;
 		if (hourlyData) {
 			for (let i = 0; i < 12; i++) {
-				str += dateFormat(new Date((hourlyData[i].time * 1000) - ((1 * 60 * 60 * 1000) * this.cstOffset)), "mm/dd/yy HH:MM Z").padEnd("15", ' ') + 
-					"\t\t" + hourlyData[i].temperature.toFixed(2) + " F \t\t" + hourlyData[i].precipProbability.toFixed(2) +
+				str += dateFormat(new Date((hourlyData[i].time * 1000) - ((1 * 60 * 60 * 1000) * this.cstOffset)), "mm/dd/yy HH:MM").padEnd("15", ' ') + 
+					"CST\t\t" + hourlyData[i].temperature.toFixed(2) + " F \t\t" + hourlyData[i].precipProbability.toFixed(2) +
 					"\t\t" + hourlyData[i].humidity.toFixed(2) + "\t\t" + hourlyData[i].windSpeed.toFixed(2) +
 					"\t\t" + hourlyData[i].summary.trim() +"\n";
 			}
