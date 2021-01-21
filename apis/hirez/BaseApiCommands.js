@@ -12,6 +12,14 @@ module.exports = class BaseApiCommands {
 		this.privateProfileResult = { "isPrivate": true };
 	}
 
+	/**
+	 * A HiRez Signature is needed for each API call.
+	 * This function takes the parameters and encodes the signature.
+	 * @param {any} devId - Provided by HiRez
+	 * @param {any} methodName - Determines which api endpoint
+	 * @param {any} authKey - Provided by HiRez
+	 * @param {any} timestamp
+	 */
 	createHirezSig(devId, methodName, authKey, timestamp) {
 		return new Promise((resolve, reject) => {
 			if (!timestamp) timestamp = moment().utc().format('YYYYMMDDHHmmss');
@@ -27,6 +35,10 @@ module.exports = class BaseApiCommands {
 		})
 	}
 
+	/**
+	 * Base Api Method
+	 * @param {any} methodName
+	 */
 	async fetchMethod(methodName) {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}`);
@@ -34,6 +46,11 @@ module.exports = class BaseApiCommands {
 		return resJson;
 	}
 
+	/**
+	 * Base Api Method with playerId input
+	 * @param {any} methodName
+	 * @param {any} playerId
+	 */
 	async fetchMethodWithPlayerId(methodName, playerId) {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
@@ -41,6 +58,11 @@ module.exports = class BaseApiCommands {
 		return resJson;
 	}
 
+	/**
+	 * Base Api Method with matchId input
+	 * @param {any} methodName
+	 * @param {any} matchId
+	 */
 	async fetchMethodWithMatchId(methodName, matchId) {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${matchId}`);
@@ -48,10 +70,10 @@ module.exports = class BaseApiCommands {
 		return resJson;
 	}
 
-	createTimestamp() {
-		return moment().utc().format('YYYYMMDDHHmmss');
-	}
-
+	/**
+	 *  Creates the session and stores it.
+	 *  The session can expire and will need to be refreshed.
+	 */
 	async createSession() {
 		const session = await this.getSession();
 		if (session.ret_msg.toLowerCase() == "approved") {
