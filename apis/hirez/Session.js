@@ -90,10 +90,7 @@ module.exports = class Session {
     }
 
 	async getMotd(methodName = "getmotd") {
-		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
-		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}`);
-		const resJson = res.json();
-		return resJson;
+		return await this.fetchMethod(methodName);
     }
 
 	async getMatchHistory(playerName, methodName = "getmatchhistory") {
