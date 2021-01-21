@@ -1,11 +1,5 @@
-const https = require('https');
-const fetch = require("node-fetch");
-const config = require("../../config.json");
-
 module.exports = class HiRezApi {
   constructor() {
-	  this.devId = config.apiKeys.smite.devId;
-	  this.authKey = config.apiKeys.smite.authKey;
   }
 
 	generatePrivateString(playerName) {
@@ -57,7 +51,7 @@ module.exports = class HiRezApi {
 		return str;
     }
 
-	async getGodKdr(godRanks) {
+	async getGodKdr(playerName, godRanks) {
 		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
 

@@ -12,10 +12,6 @@ module.exports = class HiRezApi {
 	  this.uiWriter = new UiWriter();
   }
 
-	generatePrivateString(playerName) {
-		return "Player '" + playerName + "' profile is private"
-    }
-
 	async createSession() {
 		return await this.baseApiCmds.createSession();
 	}
@@ -34,7 +30,7 @@ module.exports = class HiRezApi {
 	async getPlayerInfo(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 		const playerInfo = await this.baseApiCmds.getPlayerInfo(playerName);
-		if (playerInfo.isPrivate) return this.generatePrivateString(playerName);
+		if (playerInfo.isPrivate) return this.uiWriter.generatePrivateString(playerName);
 		return this.uiWriter.getPlayerInfo(playerInfo[0]);
     }
 
@@ -78,7 +74,7 @@ module.exports = class HiRezApi {
 
 		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 
-		return this.uiWriter.getGodKdr(godRanks);
+		return this.uiWriter.getGodKdr(playerName, godRanks);
     }
 
 	async getKdrAcrossAllGods(inputString) {
