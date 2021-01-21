@@ -100,6 +100,11 @@ module.exports = class BotResponse {
           msg.reply(
               await this.hirezApi.getKdrAcrossAllGods(msgContent)
           );
+      }
+      else if (msgContent.includes('!smite-account-info') || msgContent.includes("!sai")) {
+          msg.reply(
+              await this.hirezApi.getPlayerAccount(msgContent)
+          );
       } else if (msgContent.match(regex) != null) {
           console.log(msg);
           msg.reply(msg.id);

@@ -150,5 +150,19 @@ module.exports = class HiRezApi {
 			+ "```";
 
 		return kda;
-    }
+	}
+
+	async getPlayerAccount(inputString) {
+		let playerName = inputString.trim().split(" ");
+		playerName.shift();
+		playerName = playerName.join(" ");
+		const info = await this.hiRezSession.getPlayerIdByName(playerName);
+
+		let str = "```\n" + playerName + "\n" +
+			"Player Id: " + info[0].player_id + "\n" +
+			"Portal: " + info[0].portal + "\n" +
+			"isPrivate: " + info[0].privacy_flag + "\n" +
+			"```";
+		return str;
+	}
 }
