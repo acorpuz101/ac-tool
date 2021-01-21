@@ -12,6 +12,21 @@ module.exports = class BaseApiCommands {
 		this.privateProfileResult = { "isPrivate": true };
 	}
 
+	createHirezSig(devId, methodName, authKey, timestamp) {
+		return new Promise((resolve, reject) => {
+			if (!timestamp) timestamp = moment().utc().format('YYYYMMDDHHmmss');
+			const hash = crypto.createHash('md5');
+			hash.on('error', reject);
+			hash.on('readable', () => {
+				const data = hash.read();
+				if (!data) return reject(new Error('No hash data'));
+				return resolve({ signature: data.toString('hex'), timestamp });
+			});
+			hash.write(`${devId}${methodName.toLowerCase()}${authKey}${timestamp}`);
+			hash.end();
+		})
+	}
+
 	async fetchMethod(methodName) {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}`);
@@ -31,21 +46,6 @@ module.exports = class BaseApiCommands {
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${matchId}`);
 		const resJson = await res.json();
 		return resJson;
-	}
-
-	createHirezSig(devId, methodName, authKey, timestamp) {
-		return new Promise((resolve, reject) => {
-			if (!timestamp) timestamp = this.createTimestamp();
-			const hash = crypto.createHash('md5');
-			hash.on('error', reject);
-			hash.on('readable', () => {
-				const data = hash.read();
-				if (!data) return reject(new Error('No hash data'));
-				return resolve({ signature: data.toString('hex'), timestamp });
-			});
-			hash.write(`${devId}${methodName.toLowerCase()}${authKey}${timestamp}`);
-			hash.end();
-		})
 	}
 
 	createTimestamp() {
@@ -80,51 +80,59 @@ module.exports = class BaseApiCommands {
 		return status;
 	}
 
-	async getPlayerIdByName(playerName, methodName = "getplayeridbyname") {
+	async getPlayerIdByName(playerName) {
+		const methodName = "getplayeridbyname";
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerName}`);
 		const resJson = res.json();
 		return resJson;
 	}
 
-	async getPlayerInfo(playerName, methodName = "getplayer") {
+	async getPlayerInfo(playerName) {
+		const methodName = "getplayer";
 		let playerInfo = await this.isProfilePrivate(playerName);
 		if (playerInfo.isPrivate) return this.privateProfileResult;
 		const playerId = playerInfo.playerId;
 		return await this.fetchMethodWithPlayerId(methodName, playerId);
     }
 
-	async getMotd(methodName = "getmotd") {
+	async getMotd() {
+		const methodName = "getmotd";
 		return await this.fetchMethod(methodName);
     }
 
-	async getMatchHistory(playerName, methodName = "getmatchhistory") {
+	async getMatchHistory(playerName) {
+		const methodName = "getmatchhistory";
 		let playerInfo = await this.isProfilePrivate(playerName)
 		if (playerInfo.isPrivate) return this.privateProfileResult;
 		const playerId = playerInfo.playerId;
 		return await this.fetchMethodWithPlayerId(methodName, playerId);
 	}
 
-	async getGodRanks(playerName, methodName = "getgodranks") {
+	async getGodRanks(playerName) {
+		const methodName = "getgodranks";
 		let playerInfo = await this.isProfilePrivate(playerName)
 		if (playerInfo.isPrivate) return this.privateProfileResult;
 		const playerId = playerInfo.playerId;
 		return await this.fetchMethodWithPlayerId(methodName, playerId);
 	}
 
-	async getPlayerStatus(playerName, methodName = "getplayerstatus") {
+	async getPlayerStatus(playerName) {
+		const methodName = "getplayerstatus";
 		const player = await this.getPlayerIdByName(playerName);
 		if (await this.isProfilePrivate(playerName)) return this.privateProfileResult;
 		const playerId = player[0].player_id;
 		return await this.fetchMethodWithPlayerId(methodName, playerId);
 	}
 
-	async getMatchByMatchId(matchId, methodName = "getmatchdetails") {
+	async getMatchByMatchId(matchId) {
+		const methodName = "getmatchdetails";
 		return await this.fetchMethodWithMatchId(methodName, matchId);
 
 	}
 
-	async getMatchPlayerDetailsByMatchId(matchId, methodName = "getmatchplayerdetails") {
+	async getMatchPlayerDetailsByMatchId(matchId) {
+		const methodName = "getmatchplayerdetails";
 		return await this.fetchMethodWithMatchId(methodName, matchId);
 	}
 
