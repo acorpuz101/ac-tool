@@ -10,6 +10,10 @@ module.exports = class HiRezApi {
 	  this.hiRezSession = new HiRezSession();
   }
 
+	generatePrivateString(playerName) {
+		return "Player '" + playerName + "' profile is private"
+    }
+
 	async createSession() {
 		return await this.hiRezSession.createSession();
 	}
@@ -18,13 +22,18 @@ module.exports = class HiRezApi {
 		return this.hiRezSession.createTimestamp();
 	}
 
-	async getPlayerInfo(inputString) {
+	parsePlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
 		playerName = playerName.join(" ");
+		return playerName;
+    }
 
+	async getPlayerInfo(inputString) {
+		let playerName = this.parsePlayerName(inputString);
 
 		const playerInfo = await this.hiRezSession.getPlayerInfo(playerName);
+		if (playerInfo.isPrivate) return this.generatePrivateString(playerName);
 
 		const player = playerInfo[0];
 		const playerWins = player.Wins;
@@ -77,9 +86,7 @@ module.exports = class HiRezApi {
 
 	// TODO: Parse
 	async getMatchHistoryByPlayerName(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
+		let playerName = this.parsePlayerName(inputString);
 
 		const matchHistory = await this.hiRezSession.getMatchHistory(playerName);
 		return matchHistory;
@@ -87,20 +94,17 @@ module.exports = class HiRezApi {
 
 	// TODO: Parse
 	async getGodRanks(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
+		let playerName = this.parsePlayerName(inputString);
 
 		const godRanks = await this.hiRezSession.getGodRanks(playerName);
 		return godRanks;
 	}
 
 	async getGodKdr(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
+		let playerName = this.parsePlayerName(inputString);
 
 		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
 		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
 
@@ -117,11 +121,10 @@ module.exports = class HiRezApi {
     }
 
 	async getKdrAcrossAllGods(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
+		let playerName = this.parsePlayerName(inputString);
 
 		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
 		let godKill = 0;
 		let godDeath = 0;
@@ -153,9 +156,7 @@ module.exports = class HiRezApi {
 	}
 
 	async getPlayerAccount(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
+		let playerName = this.parsePlayerName(inputString);
 		const info = await this.hiRezSession.getPlayerIdByName(playerName);
 
 		let str = "```\n" + playerName + "\n" +
@@ -163,6 +164,33 @@ module.exports = class HiRezApi {
 			"Portal: " + info[0].portal + "\n" +
 			"isPrivate: " + info[0].privacy_flag + "\n" +
 			"```";
+		return str;
+	}
+
+	async getPlayerStatus(inputString) {
+		let playerName = this.parsePlayerName(inputString);
+		const info = await this.hiRezSession.getPlayerStatus(playerName);
+
+		console.log(info);
+		return info;
+	}
+
+	// TODO: Add player details. Check private status; might break.
+	async getMatchStatus(inputString) {
+		const info = await this.hiRezSession.getMatchPlayerDetailsByMatchId(inputString);
+
+		let str = "```\n" + "Current Match Status for " + inputString + "\n\n";
+		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t\n";
+		for (let i = 0; i < info.length; i++) {
+			let player = info[i];
+
+			// const godRank = await this.hiRezSession.getGodRanks(player);
+			// const isPrivate = (godRankInfo)
+
+			str += player.GodName.padEnd("15", " ") + "\t" + player.playerName.padEnd("15", " ") + "\t\n";
+		}
+		str += "```";
+
 		return str;
 	}
 }

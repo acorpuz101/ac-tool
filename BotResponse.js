@@ -105,6 +105,18 @@ module.exports = class BotResponse {
           msg.reply(
               await this.hirezApi.getPlayerAccount(msgContent)
           );
+      }
+      else if (msgContent.includes('!smite-match-status') || msgContent.includes("!sms")) {
+          let playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
+          let matchId = playerStatus[0].Match;
+          console.log(
+          //msg.reply(
+              matchId
+          );
+          let matchInfo = await this.hirezApi.getMatchStatus(matchId);
+          msg.reply(
+              matchInfo
+          )
       } else if (msgContent.match(regex) != null) {
           console.log(msg);
           msg.reply(msg.id);

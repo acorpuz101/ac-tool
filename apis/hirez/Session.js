@@ -9,6 +9,7 @@ module.exports = class Session {
 		this.devId = config.apiKeys.smite.devId;
 		this.authKey = config.apiKeys.smite.authKey;
 		this.session = null;
+		this.privateProfileResult = { "isPrivate": true };
 	}
 
 	async fetchMethod(methodName) {
@@ -52,6 +53,11 @@ module.exports = class Session {
 		return session;
 	}
 
+	isProfilePrivate(playerIdObj) {
+		console.log("prv", playerIdObj);
+		return (playerIdObj[0].privacy_flag == "y") ? true : false;
+    }
+
 	async getPlayerIdByName(playerName, methodName = "getplayeridbyname") {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerName}`);
@@ -61,6 +67,7 @@ module.exports = class Session {
 
 	async getPlayerInfo(playerName, methodName = "getplayer") {
 		const player = await this.getPlayerIdByName(playerName);
+		if (this.isProfilePrivate(player)) return this.privateProfileResult;
 		const playerId = player[0].player_id;
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
@@ -77,6 +84,7 @@ module.exports = class Session {
 
 	async getMatchHistory(playerName, methodName = "getmatchhistory") {
 		const player = await this.getPlayerIdByName(playerName);
+		if (this.isProfilePrivate(player)) return this.privateProfileResult;
 		const playerId = player[0].player_id;
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
@@ -86,10 +94,37 @@ module.exports = class Session {
 
 	async getGodRanks(playerName, methodName = "getgodranks") {
 		const player = await this.getPlayerIdByName(playerName);
+		if (this.isProfilePrivate(player)) return this.privateProfileResult;
 		const playerId = player[0].player_id;
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
 		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
 		const resJson = res.json();
+		return resJson;
+	}
+
+	async getPlayerStatus(playerName, methodName = "getplayerstatus") {
+		const player = await this.getPlayerIdByName(playerName);
+		if (this.isProfilePrivate(player)) return this.privateProfileResult;
+		const playerId = player[0].player_id;
+		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
+		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${playerId}`);
+		const resJson = res.json();
+		return resJson;
+	}
+
+	async getMatchByMatchId(matchId, methodName = "getmatchdetails") {
+		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
+		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${matchId}`);
+		const resJson = await res.json();
+		console.log("sess", resJson, matchId);
+		return resJson;
+	}
+
+	async getMatchPlayerDetailsByMatchId(matchId, methodName = "getmatchplayerdetails") {
+		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);
+		const res = await fetch(`http://api.smitegame.com/smiteapi.svc/${methodName}Json/${this.devId}/${signature}/${this.session ? `${this.session}/` : ''}${timestamp}/${matchId}`);
+		const resJson = await res.json();
+		console.log("sess", resJson, matchId);
 		return resJson;
 	}
 
