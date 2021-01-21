@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const moment = require('moment');
 const config = require("../../config.json");
 
-module.exports = class Session {
+module.exports = class BaseApiCommands {
 	constructor() {
 		this.devId = config.apiKeys.smite.devId;
 		this.authKey = config.apiKeys.smite.authKey;

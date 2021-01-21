@@ -1,13 +1,13 @@
 const https = require('https');
 const fetch = require("node-fetch");
 const config = require("../../config.json");
-const HiRezSession = require("./Session");
+const BaseApiCommands = require("./BaseApiCommands");
 
 module.exports = class HiRezApi {
   constructor() {
 	  this.devId = config.apiKeys.smite.devId;
 	  this.authKey = config.apiKeys.smite.authKey;
-	  this.hiRezSession = new HiRezSession();
+	  this.baseApiCmds = new BaseApiCommands();
   }
 
 	generatePrivateString(playerName) {
@@ -15,11 +15,11 @@ module.exports = class HiRezApi {
     }
 
 	async createSession() {
-		return await this.hiRezSession.createSession();
+		return await this.baseApiCmds.createSession();
 	}
 
 	createTimestamp() {
-		return this.hiRezSession.createTimestamp();
+		return this.baseApiCmds.createTimestamp();
 	}
 
 	parsePlayerName(inputString) {
@@ -32,7 +32,7 @@ module.exports = class HiRezApi {
 	async getPlayerInfo(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 
-		const playerInfo = await this.hiRezSession.getPlayerInfo(playerName);
+		const playerInfo = await this.baseApiCmds.getPlayerInfo(playerName);
 		if (playerInfo.isPrivate) return this.generatePrivateString(playerName);
 
 		const player = playerInfo[0];
@@ -51,12 +51,12 @@ module.exports = class HiRezApi {
     }
 
 	async getPlayerIdByName(name) {
-		const playerIds = await this.hiRezSession.getPlayerIdByName(name, 'getplayeridbyname');
+		const playerIds = await this.baseApiCmds.getPlayerIdByName(name, 'getplayeridbyname');
 		console.log(name, playerIds);
     }
 
 	async getServerStatus() {
-		return await this.hiRezSession.fetchMethod('gethirezserverstatus');
+		return await this.baseApiCmds.fetchMethod('gethirezserverstatus');
 	}
 
 	async statusOfServer() {
@@ -71,7 +71,7 @@ module.exports = class HiRezApi {
 	}
 
 	async getMotd() {
-		const motdJson = await this.hiRezSession.getMotd();
+		const motdJson = await this.baseApiCmds.getMotd();
 
 		console.log(motdJson);
 		const motd = motdJson[0];
@@ -88,7 +88,7 @@ module.exports = class HiRezApi {
 	async getMatchHistoryByPlayerName(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 
-		const matchHistory = await this.hiRezSession.getMatchHistory(playerName);
+		const matchHistory = await this.baseApiCmds.getMatchHistory(playerName);
 		return matchHistory;
 	}
 
@@ -96,14 +96,14 @@ module.exports = class HiRezApi {
 	async getGodRanks(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 
-		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 		return godRanks;
 	}
 
 	async getGodKdr(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 
-		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
 		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
@@ -123,7 +123,7 @@ module.exports = class HiRezApi {
 	async getKdrAcrossAllGods(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 
-		const godRanks = await this.hiRezSession.getGodRanks(playerName);
+		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
 		let godKill = 0;
@@ -157,7 +157,7 @@ module.exports = class HiRezApi {
 
 	async getPlayerAccount(inputString) {
 		let playerName = this.parsePlayerName(inputString);
-		const info = await this.hiRezSession.getPlayerIdByName(playerName);
+		const info = await this.baseApiCmds.getPlayerIdByName(playerName);
 
 		let str = "```\n" + playerName + "\n" +
 			"Player Id: " + info[0].player_id + "\n" +
@@ -169,7 +169,7 @@ module.exports = class HiRezApi {
 
 	async getPlayerStatus(inputString) {
 		let playerName = this.parsePlayerName(inputString);
-		const info = await this.hiRezSession.getPlayerStatus(playerName);
+		const info = await this.baseApiCmds.getPlayerStatus(playerName);
 
 		console.log(info);
 		return info;
@@ -177,7 +177,7 @@ module.exports = class HiRezApi {
 
 	// TODO: Add player details. Check private status; might break.
 	async getMatchStatus(inputString) {
-		const info = await this.hiRezSession.getMatchPlayerDetailsByMatchId(inputString);
+		const info = await this.baseApiCmds.getMatchPlayerDetailsByMatchId(inputString);
 
 		let str = "```\n" + "Current Match Status for " + inputString + "\n\n";
 		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t\n";
