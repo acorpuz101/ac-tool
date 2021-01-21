@@ -26,7 +26,7 @@ module.exports = class BotResponse {
     }
 
     async init() {
-        await this.hirezApi.createSession();
+        await this.hirezApi.baseApiCmds.createSession();
     }
 
   async routeMessage(msg) {

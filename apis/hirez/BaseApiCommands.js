@@ -73,7 +73,12 @@ module.exports = class BaseApiCommands {
 			"isPrivate": (player[0].privacy_flag == "y") ? true : false,
 			"playerId": player[0].player_id
 		}
-    }
+	}
+
+	async getServerStatus() {
+		const status = await this.fetchMethod('gethirezserverstatus');
+		return status;
+	}
 
 	async getPlayerIdByName(playerName, methodName = "getplayeridbyname") {
 		const { signature, timestamp } = await this.createHirezSig(this.devId, methodName, this.authKey);

@@ -10,13 +10,6 @@ module.exports = class HiRezApi {
 		return this.baseApiCmds.createTimestamp();
 	}
 
-	parsePlayerName(inputString) {
-		let playerName = inputString.trim().split(" ");
-		playerName.shift();
-		playerName = playerName.join(" ");
-		return playerName;
-    }
-
 	async getPlayerInfo(player) {
 
 		const playerWins = player.Wins;
@@ -106,14 +99,6 @@ module.exports = class HiRezApi {
 			"isPrivate: " + info[0].privacy_flag + "\n" +
 			"```";
 		return str;
-	}
-
-	async getPlayerStatus(inputString) {
-		let playerName = this.parsePlayerName(inputString);
-		const info = await this.baseApiCmds.getPlayerStatus(playerName);
-
-		console.log(info);
-		return info;
 	}
 
 	// TODO: Add player details. Check private status; might break.

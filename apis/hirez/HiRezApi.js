@@ -12,14 +12,6 @@ module.exports = class HiRezApi {
 	  this.uiWriter = new UiWriter();
   }
 
-	async createSession() {
-		return await this.baseApiCmds.createSession();
-	}
-
-	createTimestamp() {
-		return this.baseApiCmds.createTimestamp();
-	}
-
 	parsePlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
@@ -39,47 +31,24 @@ module.exports = class HiRezApi {
 		console.log(name, playerIds);
     }
 
-	async getServerStatus() {
-		return await this.baseApiCmds.fetchMethod('gethirezserverstatus');
-	}
-
 	async statusOfServer() {
-		const serverStatus = await this.getServerStatus();
+		const serverStatus = await this.baseApiCmds.getServerStatus();
 		return this.uiWriter.statusOfServer(serverStatus);
 	}
 
 	async getMotd() {
 		const motdJson = await this.baseApiCmds.getMotd();
 		return this.uiWriter.getMotd(motdJson[0]);
-    }
-
-	// TODO: Create UiWriter for this data
-	async getMatchHistoryByPlayerName(inputString) {
-		let playerName = this.parsePlayerName(inputString);
-
-		const matchHistory = await this.baseApiCmds.getMatchHistory(playerName);
-		return matchHistory;
-	}
-
-	// TODO: Create UiWriter for this data
-	async getGodRanks(inputString) {
-		let playerName = this.parsePlayerName(inputString);
-
-		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
-		return godRanks;
 	}
 
 	async getGodKdr(inputString) {
 		let playerName = this.parsePlayerName(inputString);
-
 		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
-
 		return this.uiWriter.getGodKdr(playerName, godRanks);
     }
 
 	async getKdrAcrossAllGods(inputString) {
 		let playerName = this.parsePlayerName(inputString);
-
 		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 		return this.uiWriter.getKdrAcrossAllGods(playerName, godRanks);
 	}
@@ -116,5 +85,21 @@ module.exports = class HiRezApi {
 		str += "```";
 
 		return str;
+	}
+
+	// TODO: Create UiWriter for this data
+	async getMatchHistoryByPlayerName(inputString) {
+		let playerName = this.parsePlayerName(inputString);
+
+		const matchHistory = await this.baseApiCmds.getMatchHistory(playerName);
+		return matchHistory;
+	}
+
+	// TODO: Create UiWriter for this data
+	async getGodRanks(inputString) {
+		let playerName = this.parsePlayerName(inputString);
+
+		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
+		return godRanks;
 	}
 }
