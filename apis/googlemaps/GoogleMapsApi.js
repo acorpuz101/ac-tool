@@ -1,6 +1,6 @@
 const https = require('https');
 const fetch = require("node-fetch");
-const config = require("../../config.json");
+const auth = require("../../auth.json");
 
 module.exports = class GoogleMapsApi {
   constructor() {
@@ -9,11 +9,12 @@ module.exports = class GoogleMapsApi {
 	  this.method = "POST";
 	  this.headers = { 'Content-Type': 'application/json'};
 	  this.geocodeHostname = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+	  this.apiKey = auth.apiKeys.googleMaps;
   }
   
   async getGeocode(inputString) {
 	  try {
-		  let uri = this.geocodeHostname + inputString.trim().split(" ").join("+") + "&key=" + config.apiKeys.googleMaps;
+		  let uri = this.geocodeHostname + inputString.trim().split(" ").join("+") + "&key=" + this.apiKey;
 		  const response = await fetch(uri, {
 			  method: "GET",
 			  headers: this.headers

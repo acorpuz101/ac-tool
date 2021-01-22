@@ -2,12 +2,12 @@ const https = require('https');
 const fetch = require("node-fetch");
 const crypto = require('crypto');
 const moment = require('moment');
-const config = require("../../config.json");
+const auth = require("../../auth.json");
 
 module.exports = class BaseApiCommands {
 	constructor() {
-		this.devId = config.apiKeys.smite.devId;
-		this.authKey = config.apiKeys.smite.authKey;
+		this.devId = auth.apiKeys.smite.devId;
+		this.authKey = auth.apiKeys.smite.authKey;
 		this.session = null;
 		this.privateProfileResult = { "isPrivate": true };
 	}

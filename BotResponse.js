@@ -1,8 +1,4 @@
 // Import dependencies
-const https = require('https');
-const fetch = require("node-fetch");
-const config = require("./config.json");
-
 const DbdApi = require('./apis/dbd/DbdApi');
 const GoogleMapsApi = require('./apis/googlemaps/GoogleMapsApi');
 const DarkSkyApi = require('./apis/darksky/DarkSkyApi');

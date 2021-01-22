@@ -1,7 +1,6 @@
 .idea
 .vs
 node_modules
-config.json
 auth.json
 liveData.json
 logs.log

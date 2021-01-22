@@ -1,6 +1,6 @@
 const https = require('https');
 const fetch = require("node-fetch");
-const config = require("../../config.json");
+const auth = require("../../auth.json");
 const dateFormat = require('dateformat');
 
 module.exports = class DarkSkyApi {
@@ -8,7 +8,7 @@ module.exports = class DarkSkyApi {
 	  this.apiHostname = "https://api.darksky.net/forecast/";
 	  this.endpoint = "";
 	  this.method = "GET";
-	  this.apiKey = config.apiKeys.darkSky;
+	  this.apiKey = auth.apiKeys.darkSky;
 	  this.headers = { 'Content-Type': 'application/json' };
 	  this.cstOffset = 6;
   }

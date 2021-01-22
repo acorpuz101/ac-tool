@@ -1,3 +1,11 @@
 {
-  "token": "YOUR_TOKEN_HERE"
+  "token": "YOUR_TOKEN_HERE",
+  "apiKeys": {
+    "darkSky": "YOUR_KEY_HERE",
+    "googleMaps": "YOUR_KEY_HERE",
+    "smite": {
+      "authKey": "YOUR_KEY_HERE",
+      "devId": "YOUR_KEY_HERE"
+    }
+  }
 }

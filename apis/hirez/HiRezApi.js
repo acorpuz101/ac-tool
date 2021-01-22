@@ -1,13 +1,13 @@
 const https = require('https');
 const fetch = require("node-fetch");
-const config = require("../../config.json");
+const auth = require("../../auth.json");
 const BaseApiCommands = require("./BaseApiCommands");
 const UiWriter = require("./UiWriter");
 
 module.exports = class HiRezApi {
   constructor() {
-	  this.devId = config.apiKeys.smite.devId;
-	  this.authKey = config.apiKeys.smite.authKey;
+	  this.devId = auth.apiKeys.smite.devId;
+	  this.authKey = auth.apiKeys.smite.authKey;
 	  this.baseApiCmds = new BaseApiCommands();
 	  this.uiWriter = new UiWriter();
 	}

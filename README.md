@@ -7,8 +7,9 @@ NodeJs installed
 
 1. Install dependencies using `npm install`
 	1. You might need to run `npm install discord.js` too
-2. Add your discord bot key in `auth.json`
-3. Add your API keys in `config.json`
+2. Copy `auth.json.dist` and remove the `.dist`.
+3. Add your bot token and api keys to `auth.json`.
+4. (Optional) Configure any properties in `config.json`.
 
 ### Start the Bot
 
