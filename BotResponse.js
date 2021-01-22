@@ -41,74 +41,83 @@ module.exports = class BotResponse {
       )
 
       let msgContent = msg.content;
+      let cmd = msgContent.split(" ")[0];
+      let coord, data;
+
+      // TODO: Make better short commands,
+      // and add the long commands
+      if (true) {
+          switch (cmd) {
+              case "!weather":
+                  coord = await this.googleMapsApi.getCoordinates(msgContent);
+                  data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+                  msg.reply(
+                      data
+                  );
+                  break;
+              case "!hourly-w":
+                  coord = await this.googleMapsApi.getCoordinates(msgContent);
+                  data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+                  msg.reply(
+                      data
+                  );
+                  break;
+              case "!week-w":
+                  coord = await this.googleMapsApi.getCoordinates(msgContent);
+                  data = await this.darkSkyApi.getEightDayForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+                  msg.reply(
+                      data
+                  );
+                  break;
+              case "!coord":
+                  msg.reply(
+                      await this.googleMapsApi.getFormattedCoordinates(msgContent)
+                  );
+                  break;
+              case "!shrine":
+                  msg.reply(
+                      await this.dbdApi.getShrine()
+                  );
+                  break;
+              case "!spi":
+                  msg.reply(
+                      await this.hirezApi.getPlayerInfo(msgContent)
+                  );
+                  break;
+              case "!sss":
+                  msg.reply(
+                      await this.hirezApi.statusOfServer()
+                  );
+                  break;
+              case "!smotd":
+                  msg.reply(
+                      await this.hirezApi.getMotd()
+                  );
+                  break;
+              case "!sgr":
+                  msg.reply(
+                      await this.hirezApi.getGodKdr(msgContent)
+                  );
+                  break;
+              case "!sgr":
+                  msg.reply(
+                      await this.hirezApi.getKdrAcrossAllGods(msgContent)
+                  );
+                  break;
+              case "!sai":
+                  msg.reply(
+                      await this.hirezApi.getPlayerAccount(msgContent)
+                  );
+                  break;
+              default:
+                  // do nothing
+          }
+      }
+
+      // TODO: Convert the rest to switch style
+
       if (msgContent === '!ping') {
           msg.reply("ping\tping\tping\nping");
-      }
-      else if (msgContent.includes('!weather')) {
-          const coord = await this.googleMapsApi.getCoordinates(msgContent);
-          let data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-          msg.reply(
-              data
-          );
-      }
-      else if (msgContent.includes('!hourly-w')) {
-          const coord = await this.googleMapsApi.getCoordinates(msgContent);
-          let data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-          msg.reply(
-              data
-          );
-      }
-      else if (msgContent.includes('!week-w')) {
-          const coord = await this.googleMapsApi.getCoordinates(msgContent);
-          let data = await this.darkSkyApi.getEightDayForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-          msg.reply(
-              data
-          );
-      }
-      else if (msgContent.includes('!coord')) {
-          msg.reply(
-              await this.googleMapsApi.getFormattedCoordinates(msgContent)
-          );
-      }
-      else if (msgContent === '!dbd shrine') {
-          msg.reply(
-              await this.dbdApi.getShrine()
-          );
-      }
-      else if (msgContent.includes('!smite-playerInfo') || msgContent.includes('!smite-pi')) {
-          msg.reply(
-              await this.hirezApi.getPlayerInfo(msgContent)    
-          );
-      }
-      else if (msgContent === '!smite-server-status' || msgContent === "!smite-ss") {
-          msg.reply(
-              await this.hirezApi.statusOfServer() 
-          );
-      }
-      else if (msgContent === '!smite-motd' || msgContent === "!smotd") {
-          msg.reply(
-              await this.hirezApi.getMotd() 
-          );
-      }
-      else if (msgContent.includes('!smite-match-history') || msgContent.includes("!smite-mh")) {
-          console.log(
-              await this.hirezApi.getMatchHistoryByPlayerName(msgContent)
-          );
-      }
-      else if (msgContent.includes('!smite-god-ranks') || msgContent.includes("!sgr")) {
-          msg.reply(
-              await this.hirezApi.getGodKdr(msgContent)
-          );
-      }
-      else if (msgContent.includes('!smite-kda-allgods') || msgContent.includes("!skda")) {
-          msg.reply(
-              await this.hirezApi.getKdrAcrossAllGods(msgContent)
-          );
-      }
-      else if (msgContent.includes('!smite-account-info') || msgContent.includes("!sai")) {
-          msg.reply(
-              await this.hirezApi.getPlayerAccount(msgContent)
-          );
       }
       else if (msgContent.includes('!smite-match-status') || msgContent.includes("!sms")) {
           let playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
