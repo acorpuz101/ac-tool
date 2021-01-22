@@ -48,13 +48,13 @@ module.exports = class DarkSkyApi {
 	async getHourlyForecast(latLongStr, formattedAddress) {
 	  const getForecastJson = await this.getForecast(latLongStr);
 		let str = "```ini\n" + formattedAddress + "\n";
-		str += "\tDate\tTime\t\tTemp\t\t\tPrecip%\tHumidity\tWindSpd\t\tSummary\n";
+		str += "\tDate Time\t\tTemp\t\t\tPrecip%\tHumidity\tWindSpd\t\tSummary\n";
 		const hourlyData = getForecastJson.hourly.data;
 		if (hourlyData) {
 			for (let i = 0; i < 12; i++) {
 				str += dateFormat(new Date((hourlyData[i].time * 1000) - ((1 * 60 * 60 * 1000) * this.cstOffset)), "mm/dd/yy HH:MM").padEnd("15", ' ') + 
 					"CST\t\t" + hourlyData[i].temperature.toFixed(2) + " F \t\t" + (hourlyData[i].precipProbability.toFixed(2) * 100) +
-					"\t\t" + (hourlyData[i].humidity.toFixed(2) * 100) + "\t\t" + hourlyData[i].windSpeed.toFixed(2) +
+					"%\t\t" + (hourlyData[i].humidity.toFixed(2) * 100) + "%\t\t" + hourlyData[i].windSpeed.toFixed(2) +
 					"\t\t" + hourlyData[i].summary.trim() +"\n";
 			}
 			str += "```";
@@ -71,11 +71,12 @@ module.exports = class DarkSkyApi {
 			for (let i = 0; i < dailyData.length; i++) {
 				str += dateFormat(new Date(dailyData[i].time * 1000), "ddd mm/dd/yy") +
 					"\t\t" + dailyData[i].temperatureHigh.toFixed(2) + "F / " + dailyData[i].temperatureLow.toFixed(2) + "F" +
-					"\t\t" + dailyData[i].precipProbability.toFixed(2) +
-					"\t\t" + dailyData[i].humidity.toFixed(2) + "\t\t" + dailyData[i].windSpeed.toFixed(2) +
+					"\t\t" + dailyData[i].precipProbability.toFixed(2) + "%" +
+					"\t\t" + dailyData[i].humidity.toFixed(2) + "%\t\t" + dailyData[i].windSpeed.toFixed(2) +
 					"\t\t" + dailyData[i].summary.trim() + "\n";
 			}
 			str += "```";
+
 			return str;
 		}
 	}
