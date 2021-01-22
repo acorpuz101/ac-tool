@@ -34,9 +34,7 @@ module.exports = class BotResponse {
 
       // Check if HiRez session is valid
       // TODO: When invaid, get a new session
-      console.log(
-          await this.hirezApi.checkIfSessionIsValid()
-      )
+      await this.hirezApi.checkIfSessionIsValid();
 
       // Get the message content
       let msgContent = msg.content;

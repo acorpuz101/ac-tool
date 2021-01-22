@@ -13,7 +13,11 @@ module.exports = class HiRezApi {
 	}
 
 	async checkIfSessionIsValid() {
-		return await this.baseApiCmds.validateSession();
+		const data = await this.baseApiCmds.validateSession();
+		if (data.toLowerCase().includes("invalid session key")) {
+			console.log("Invalid HiRez Session. Creating new session.");
+			await this.baseApiCmds.createSession();
+        }
     }
 
 	parsePlayerName(inputString) {
