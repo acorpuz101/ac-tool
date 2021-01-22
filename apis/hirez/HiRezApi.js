@@ -10,7 +10,11 @@ module.exports = class HiRezApi {
 	  this.authKey = config.apiKeys.smite.authKey;
 	  this.baseApiCmds = new BaseApiCommands();
 	  this.uiWriter = new UiWriter();
-  }
+	}
+
+	async checkIfSessionIsValid() {
+		return await this.baseApiCmds.validateSession();
+    }
 
 	parsePlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");

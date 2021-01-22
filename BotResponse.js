@@ -36,6 +36,10 @@ module.exports = class BotResponse {
       // Only messages in the target channel will be replied to
       if (!TARGET_CHANNELS.includes(msg.channel.name)) return;
 
+      console.log(
+          await this.hirezApi.checkIfSessionIsValid()
+      )
+
       let msgContent = msg.content;
       if (msgContent === '!ping') {
           msg.reply("ping\tping\tping\nping");

@@ -89,6 +89,11 @@ module.exports = class BaseApiCommands {
 		return session;
 	}
 
+	async validateSession() {
+		const session = await this.fetchMethod('testsession');
+		return session;
+	}
+
 	async isProfilePrivate(playerName) {
 		const player = await this.getPlayerIdByName(playerName);
 		return {
