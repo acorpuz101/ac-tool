@@ -36,12 +36,22 @@ module.exports = class BotResponse {
       // Only messages in the target channel will be replied to
       if (!TARGET_CHANNELS.includes(msg.channel.name)) return;
 
+      // Check if HiRez session is valid
+      // TODO: When invaid, get a new session
       console.log(
           await this.hirezApi.checkIfSessionIsValid()
       )
 
+      // Get the message content
       let msgContent = msg.content;
-      let cmd = msgContent.split(" ")[0];
+
+      // Split the string up by each word
+      let splitMsgContent = msgContent.split(" ")
+
+      // The first word is the command
+      let cmd = splitMsgContent[0];
+
+      // Initialize variables to be used in the switch
       let coord, data;
 
       // TODO: Make better short commands,
