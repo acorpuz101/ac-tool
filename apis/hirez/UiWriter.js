@@ -1,3 +1,5 @@
+const moment = require("moment-timezone");
+
 module.exports = class HiRezApi {
   constructor() {
   }
@@ -36,11 +38,40 @@ module.exports = class HiRezApi {
 	}
 
 	async getMotd(motd) {
-		let str = "```\nSmite MOTD\n\n" +
-			motd.name + "\n" +
-			"Max Players: " + motd.maxPlayers + "\n" +
-			"Description: " + motd.description.replace(/<li>/g, "\n\t").replace(/<\/li>/g, "") + "\n" +
-			"```";
+
+		let todaysDate = new Date();
+
+		let latestMotd = motd.filter(
+			e => {
+				var d = new Date(e.startDateTime);
+				return (
+					d.getMonth() == todaysDate.getMonth() &&
+					d.getDate() == todaysDate.getDate());
+			}
+		)[0];
+
+		let str = "```\nSmite MOTD\t" + moment(new Date(latestMotd.startDateTime)).tz('America/Chicago').format("ddd MM/DD/YY zz") + "\n\n" +
+			latestMotd.name + "\n" +
+			"Max Players: " + latestMotd.maxPlayers + "\n" +
+			"Description: " + latestMotd.description.replace(/<li>/g, "\n\t").replace(/<\/li>/g, "") + "\n" +
+			"\n\n" + "Future MOTDs" + "\n";
+
+		let numberOfDaysToList = 4; // HiRez usually only lists 4 days into the future. Adding more days won't break it.
+		for (let i = 0; i < numberOfDaysToList + 1; i++) {
+			let nextMotd = motd.filter(e => {
+				var d = new Date(e.startDateTime);
+				return (
+					d.getMonth() == todaysDate.getMonth() &&	// Month must match or else it might post last month's motd
+					d.getDate() == new Date().getDate() + i);
+			})[0];
+
+			// If the listing exists, write it to the string. If not, nothing
+			if (nextMotd) {
+				let motdDate = moment(new Date(nextMotd.startDateTime));
+				str += motdDate.tz('America/Chicago').format("ddd MM/DD").padEnd("10", " ") + "\t" + nextMotd.name + "\n";
+			}
+        }
+			str += "```";
 		return str;
     }
 

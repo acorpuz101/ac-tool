@@ -46,7 +46,7 @@ module.exports = class HiRezApi {
 
 	async getMotd() {
 		const motdJson = await this.baseApiCmds.getMotd();
-		return this.uiWriter.getMotd(motdJson[0]);
+		return this.uiWriter.getMotd(motdJson);
 	}
 
 	async getGodKdr(inputString) {
