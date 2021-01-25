@@ -15,29 +15,30 @@ module.exports = class HiRezApi {
 	async checkIfSessionIsValid() {
 		const data = await this.baseApiCmds.validateSession();
 		if (data.toLowerCase().includes("invalid session id")) {
+			this.baseApiCmds.setSessionToNull();
 			console.log("Invalid HiRez Session. Creating new session.");
 			await this.baseApiCmds.createSession();
-        }
-    }
+		}
+  }
 
 	parsePlayerName(inputString) {
 		let playerName = inputString.trim().split(" ");
 		playerName.shift();
 		playerName = playerName.join(" ");
 		return playerName;
-    }
+  }
 
 	async getPlayerInfo(inputString) {
 		let playerName = this.parsePlayerName(inputString);
 		const playerInfo = await this.baseApiCmds.getPlayerInfo(playerName);
 		if (playerInfo.isPrivate) return this.uiWriter.generatePrivateString(playerName);
 		return this.uiWriter.getPlayerInfo(playerInfo[0]);
-    }
+  }
 
 	async getPlayerIdByName(name) {
 		const playerIds = await this.baseApiCmds.getPlayerIdByName(name, 'getplayeridbyname');
 		console.log(name, playerIds);
-    }
+  }
 
 	async statusOfServer() {
 		const serverStatus = await this.baseApiCmds.getServerStatus();
@@ -53,7 +54,7 @@ module.exports = class HiRezApi {
 		let playerName = this.parsePlayerName(inputString);
 		const godRanks = await this.baseApiCmds.getGodRanks(playerName);
 		return this.uiWriter.getGodKdr(playerName, godRanks);
-    }
+  }
 
 	async getKdrAcrossAllGods(inputString) {
 		let playerName = this.parsePlayerName(inputString);
