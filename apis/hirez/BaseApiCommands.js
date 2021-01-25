@@ -89,6 +89,11 @@ module.exports = class BaseApiCommands {
 		return session;
 	}
 
+	// The session needs to be null for a successful getSession()
+	setSessionToNull() {
+		this.session = null;
+  }
+
 	async validateSession() {
 		const session = await this.fetchMethod('testsession');
 		return session;
