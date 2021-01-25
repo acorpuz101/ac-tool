@@ -103,7 +103,7 @@ module.exports = class BotResponse {
                       await this.hirezApi.getGodKdr(msgContent)
                   );
                   break;
-              case "!sgr":
+              case "!skda":
                   msg.reply(
                       await this.hirezApi.getKdrAcrossAllGods(msgContent)
                   );

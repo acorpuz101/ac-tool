@@ -84,9 +84,39 @@ module.exports = class HiRezApi {
 
 		const matchId = playerStatus[0].Match;
 		const info = await this.baseApiCmds.getMatchPlayerDetailsByMatchId(matchId);
-		//console.log("matchDetails", info);
 
-		return await this.uiWriter.getMatchStatus(info, playerName);
+		// get each player's individual stats
+		// init empty object
+		let eachPlayerInfo = {};
+
+		// add each player to the obj
+		// key: playerName, value: playerInfo
+		for (let i = 0; i < info.length; i++) {
+
+			let playerInfo;
+			const iPlayerName = info[i].playerName;
+			eachPlayerInfo[iPlayerName] = "";
+
+			if (iPlayerName == "") continue;
+			
+			try {
+				playerInfo = await this.baseApiCmds.getPlayerInfo(iPlayerName); // TODO: Changes this to GodRanks then use that data
+			} catch (e) {
+				console.log('error', i, info[i]);
+				console.log(e);
+				continue;
+			}
+
+			if (playerInfo.isPrivate) continue;
+
+			eachPlayerInfo[iPlayerName] = playerInfo[0];
+		}
+
+		//console.log('gms', eachPlayerInfo);
+
+		let string = await this.uiWriter.getMatchStatus(info, playerName, eachPlayerInfo);
+
+		return string;
 	}
 
 	// TODO: Create UiWriter for this data

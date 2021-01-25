@@ -133,17 +133,25 @@ module.exports = class HiRezApi {
 	}
 
 	// TODO: Add player details. Check private status; might break.
-	async getMatchStatus(info, playerName) {
+	async getMatchStatus(info, playerName, eachPlayerInfo) {
 
 		let str = "```\n" + "Current Match Status for " + playerName + "\n\n";
-		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t\n";
+		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t" + "W:L".padStart("6", " ").padEnd("6", " ") + "\n";
 		for (let i = 0; i < info.length; i++) {
+			// Match Info
 			let player = info[i];
 
-			// const godRank = await this.hiRezSession.getGodRanks(player);
-			// const isPrivate = (godRankInfo)
+			// Player Info
+			let playerInfo = eachPlayerInfo[player.playerName];
+			if (playerInfo == "") {
+				str += player.GodName.padEnd("15", " ") + "\t" + player.playerName.padEnd("15", " ") + "\t\n"
+				continue;
+			}
 
-			str += player.GodName.padEnd("15", " ") + "\t" + player.playerName.padEnd("15", " ") + "\t\n";
+			let wlString = playerInfo.Wins + ":" + playerInfo.Losses;
+
+			str += player.GodName.padEnd("15", " ") + "\t" + player.playerName.padEnd("15", " ") + "\t" + wlString.padEnd("15", " ") + "\n";
+
 		}
 		str += "```";
 
