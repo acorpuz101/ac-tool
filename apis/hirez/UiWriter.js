@@ -133,9 +133,9 @@ module.exports = class HiRezApi {
 	}
 
 	// TODO: Add player details. Check private status; might break.
-	async getMatchStatus(info) {
+	async getMatchStatus(info, playerName) {
 
-		let str = "```\n" + "Current Match Status for " + inputString + "\n\n";
+		let str = "```\n" + "Current Match Status for " + playerName + "\n\n";
 		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t\n";
 		for (let i = 0; i < info.length; i++) {
 			let player = info[i];

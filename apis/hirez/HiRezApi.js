@@ -69,30 +69,24 @@ module.exports = class HiRezApi {
 
 	async getPlayerStatus(inputString) {
 		let playerName = this.parsePlayerName(inputString);
-		const info = await this.baseApiCmds.getPlayerStatus(playerName);
+		let playerStatus = await this.baseApiCmds.getPlayerStatus(playerName);
+		console.log("gps-playerSTatus", playerStatus);
 
-		console.log(info);
-		return info;
+		return playerStatus;
 	}
 
-	// TODO: Add player details. Check private status; might break.
-	// Move UI code to UiWriter
+	// Works, needs more data
 	async getMatchStatus(inputString) {
-		const info = await this.baseApiCmds.getMatchPlayerDetailsByMatchId(inputString);
 
-		let str = "```\n" + "Current Match Status for " + inputString + "\n\n";
-		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t\n";
-		for (let i = 0; i < info.length; i++) {
-			let player = info[i];
+		let playerName = this.parsePlayerName(inputString);
+		let playerStatus = await this.baseApiCmds.getPlayerStatus(playerName);
+		if (playerStatus.isPrivate == true) return this.uiWriter.generatePrivateString(playerName);
 
-			// const godRank = await this.hiRezSession.getGodRanks(player);
-			// const isPrivate = (godRankInfo)
+		const matchId = playerStatus[0].Match;
+		const info = await this.baseApiCmds.getMatchPlayerDetailsByMatchId(matchId);
+		//console.log("matchDetails", info);
 
-			str += player.GodName.padEnd("15", " ") + "\t" + player.playerName.padEnd("15", " ") + "\t\n";
-		}
-		str += "```";
-
-		return str;
+		return await this.uiWriter.getMatchStatus(info, playerName);
 	}
 
 	// TODO: Create UiWriter for this data

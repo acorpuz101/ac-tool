@@ -46,7 +46,7 @@ module.exports = class BotResponse {
       let cmd = splitMsgContent[0];
 
       // Initialize variables to be used in the switch
-      let coord, data;
+      let coord, data, playerStatus;
 
       // TODO: Make better short commands,
       // and add the long commands
@@ -113,6 +113,20 @@ module.exports = class BotResponse {
                       await this.hirezApi.getPlayerAccount(msgContent)
                   );
                   break;
+              case "!sps":
+                  playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
+                  console.log(
+                  //msg.reply(
+                      playerStatus
+                  );
+                  break;
+              case "!sms":
+                  playerStatus = await this.hirezApi.getMatchStatus(msgContent);
+                  //console.log(
+                  msg.reply(
+                      playerStatus
+                  );
+                  break;
               default:
                   // do nothing
           }
@@ -123,18 +137,7 @@ module.exports = class BotResponse {
       if (msgContent === '!ping') {
           msg.reply("ping\tping\tping\nping");
       }
-      else if (msgContent.includes('!smite-match-status') || msgContent.includes("!sms")) {
-          let playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
-          let matchId = playerStatus[0].Match;
-          console.log(
-          //msg.reply(
-              matchId
-          );
-          let matchInfo = await this.hirezApi.getMatchStatus(matchId);
-          msg.reply(
-              matchInfo
-          )
-      } else if (msgContent.match(regex) != null) {
+      else if (msgContent.match(regex) != null) {
           console.log(msg);
           msg.reply(msg.id);
       }

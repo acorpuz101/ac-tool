@@ -145,11 +145,11 @@ module.exports = class BaseApiCommands {
 	}
 
 	async getPlayerStatus(playerName) {
-		const methodName = "getplayerstatus";
-		const player = await this.getPlayerIdByName(playerName);
-		if (await this.isProfilePrivate(playerName)) return this.privateProfileResult;
-		const playerId = player[0].player_id;
-		return await this.fetchMethodWithPlayerId(methodName, playerId);
+
+		let playerInfo = await this.isProfilePrivate(playerName);
+		if (playerInfo.isPrivate == true) return this.privateProfileResult;
+		const playerId = playerInfo.playerId;
+		return await this.fetchMethodWithPlayerId("getplayerstatus", playerId);
 	}
 
 	async getMatchByMatchId(matchId) {
