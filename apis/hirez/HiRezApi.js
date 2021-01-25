@@ -14,7 +14,7 @@ module.exports = class HiRezApi {
 
 	async checkIfSessionIsValid() {
 		const data = await this.baseApiCmds.validateSession();
-		if (data.toLowerCase().includes("invalid session key")) {
+		if (data.toLowerCase().includes("invalid session id")) {
 			console.log("Invalid HiRez Session. Creating new session.");
 			await this.baseApiCmds.createSession();
         }
@@ -112,7 +112,7 @@ module.exports = class HiRezApi {
 			eachPlayerInfo[iPlayerName] = playerInfo[0];
 		}
 
-		//console.log('gms', eachPlayerInfo);
+		console.log('gms', eachPlayerInfo);
 
 		let string = await this.uiWriter.getMatchStatus(info, playerName, eachPlayerInfo);
 
