@@ -3,6 +3,7 @@ const DbdApi = require('./apis/dbd/DbdApi');
 const GoogleMapsApi = require('./apis/googlemaps/GoogleMapsApi');
 const DarkSkyApi = require('./apis/darksky/DarkSkyApi');
 const HiRezApi = require('./apis/hirez/HiRezApi');
+const TxStatePark = require('./tx-state-park/TxStatePark');
 
 const ADRIANS_ID = '179314473088188417';
 const ANNAS_ID = '181522225835409408';
@@ -18,6 +19,7 @@ module.exports = class BotResponse {
         this.googleMapsApi = new GoogleMapsApi();
         this.darkSkyApi = new DarkSkyApi();
         this.hirezApi = new HiRezApi();
+        this.txStatePark = new TxStatePark();
         this.init();
     }
 
@@ -137,9 +139,11 @@ module.exports = class BotResponse {
       if (msgContent === '!ping') {
           msg.reply("ping\tping\tping\nping");
       }
-      else if (msgContent.match(regex) != null) {
-          console.log(msg);
-          msg.reply(msg.id);
+      else if (msgContent.includes("https://tpwd.texas.gov/state-parks/")) {
+        console.log(
+          await this.txStatePark.startBrowser(msgContent)
+        );
+        msg.reply("tx state park");
       }
   }
 }
