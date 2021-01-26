@@ -32,7 +32,7 @@ module.exports = class HiRezApi {
 		let playerName = this.parsePlayerName(inputString);
 		const playerInfo = await this.baseApiCmds.getPlayerInfo(playerName);
 		if (playerInfo.isPrivate) return this.uiWriter.generatePrivateString(playerName);
-		return this.uiWriter.getPlayerInfo(playerInfo[0]);
+		return this.uiWriter.getPlayerInfo(playerInfo);
   }
 
 	async getPlayerIdByName(name) {
