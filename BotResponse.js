@@ -140,10 +140,9 @@ module.exports = class BotResponse {
           msg.reply("ping\tping\tping\nping");
       }
       else if (msgContent.includes("https://tpwd.texas.gov/state-parks/")) {
-        console.log(
-          await this.txStatePark.startBrowser(msgContent)
+        msg.reply(
+          await this.txStatePark.scrapeParkInfo(msgContent)
         );
-        msg.reply("tx state park");
       }
   }
 }
