@@ -9,23 +9,6 @@ module.exports = class TxStatePark {
 
   }
 
-  async startBrowser() {
-    let browser;
-
-    try {
-      console.log("Opening the browser......");
-      browser = await puppeteer.launch({
-        //headless: false,
-        args: ["--disable-setuid-sandbox"],
-        'ignoreHTTPSErrors': true
-      });
-    } catch (err) {
-      console.log("Could not create a browser instance => : ", err);
-    }
-
-    return browser;
-  }
-
   getUrlFromMessage(messageWithUrl) {
     // Search message for url with regex
     const urlIndexStart = messageWithUrl.search(/https?:\/\/?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
@@ -37,11 +20,9 @@ module.exports = class TxStatePark {
     return noLeadingText.split(" ")[0]
   }
 
-  async scrapeParkInfo(messageWithUrl) {
+  async scrapeParkInfo(messageWithUrl, browser) {
 
     const parkUri = this.getUrlFromMessage(messageWithUrl);
-
-    const browser = await this.startBrowser();
 
     let page = await browser.newPage();
 
