@@ -50,6 +50,10 @@ module.exports = class HiRezApi {
 
 		let todaysDate = new Date();
 
+		// Convert to CST
+		// TODO: Find a better solution
+		todaysDate.setUTCHours(todaysDate.getUTCHours() - 6);
+
 		let latestMotd = motd.filter(
 			e => {
 				var d = new Date(e.startDateTime);
