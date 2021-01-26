@@ -22,11 +22,14 @@ module.exports = class DbdApi {
 	}
   }
 
-  async getShrine(cmd, fullCmd) {
+	async getShrine(splitMsg) {
 		this.endpoint = "/api/shrineofsecrets";
 		const data = await this.getDbdApiRequest();
 		const perkData = await this.getPerks();
-		return this.createShrineEmbed(data, perkData);
+
+		const detailedArgExists = (splitMsg[1] == "-d");
+
+		return (detailedArgExists) ? this.createShrineEmbed(data, perkData) : this.createShrineText(data);
 	}
 
 	async getPerks() {
@@ -47,6 +50,20 @@ module.exports = class DbdApi {
 		// Replace starting quotes with a new line
 		description = description.replace(" \"", "\n\"");
 		return description;
+	}
+
+	// just for ryphex
+	createShrineText(shrineData) {
+		const date = new Date(shrineData.endDate);
+		let str = "```diff\n" +
+			"Todays's Shine of Secrets\n" +
+			"- " + shrineData.items[0].Name + "\n" +
+			"- " + shrineData.items[1].Name + "\n" +
+			"- " + shrineData.items[2].Name + "\n" +
+			"- " + shrineData.items[3].Name + "\n" +
+			"Ends: " + date.toLocaleDateString() + " " + date.toLocaleTimeString("en-US", { timeZone: "America/Chicago" }) + " CST\n" +
+			"```";
+		return str;
   }
 
 	createShrineEmbed(shrineData, perkData) {

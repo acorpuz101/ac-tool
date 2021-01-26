@@ -82,7 +82,7 @@ module.exports = class BotResponse {
                   break;
               case "!shrine":
                   msg.reply(
-                      await this.dbdApi.getShrine()
+                    await this.dbdApi.getShrine(splitMsgContent)
                   );
                   break;
               case "!spi":
