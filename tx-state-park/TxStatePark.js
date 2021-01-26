@@ -26,13 +26,26 @@ module.exports = class TxStatePark {
     return browser;
   }
 
-  async scrapeParkInfo(inputStringUrl) {
+  getUrlFromMessage(messageWithUrl) {
+    // Search message for url with regex
+    const urlIndexStart = messageWithUrl.search(/https?:\/\/?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g);
+
+    // Remove all non-url text from the beginning of the string
+    const noLeadingText = messageWithUrl.substring(urlIndexStart, messageWithUrl.length);
+
+    // Split up the trailing non-url text and return the first result
+    return noLeadingText.split(" ")[0]
+  }
+
+  async scrapeParkInfo(messageWithUrl) {
+
+    const parkUri = this.getUrlFromMessage(messageWithUrl);
 
     const browser = await this.startBrowser();
 
     let page = await browser.newPage();
 
-    await page.goto(inputStringUrl);
+    await page.goto(parkUri);
 
     let text = await page.evaluate(
       () => {

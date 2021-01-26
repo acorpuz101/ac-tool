@@ -1,4 +1,4 @@
-// Import dependencies
+﻿// Import dependencies
 const DbdApi = require('./apis/dbd/DbdApi');
 const GoogleMapsApi = require('./apis/googlemaps/GoogleMapsApi');
 const DarkSkyApi = require('./apis/darksky/DarkSkyApi');
@@ -8,7 +8,7 @@ const TxStatePark = require('./tx-state-park/TxStatePark');
 const ADRIANS_ID = '179314473088188417';
 const ANNAS_ID = '181522225835409408';
 const BOT_ID = '358256950250700805';
-const TARGET_CHANNELS = 'test,bot-cmds';
+const TARGET_CHANNELS = 'test,bot-cmds,camping';
 
 let tagObj = {};
 let regex = /[#]\w*/g;
@@ -134,12 +134,13 @@ module.exports = class BotResponse {
           }
       }
 
-      // TODO: Convert the rest to switch style
+      // Keep IF/ELSE for the 'includes' logic
 
       if (msgContent === '!ping') {
           msg.reply("ping\tping\tping\nping");
       }
       else if (msgContent.includes("https://tpwd.texas.gov/state-parks/")) {
+        msg.react('👍');
         msg.reply(
           await this.txStatePark.scrapeParkInfo(msgContent)
         );
