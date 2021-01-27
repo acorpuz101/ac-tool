@@ -48,89 +48,91 @@ module.exports = class BotResponse {
       let cmd = splitMsgContent[0];
 
       // Initialize variables to be used in the switch
-      let coord, data, playerStatus;
+      let coord, alternateDate = "", data, playerStatus;
 
       // TODO: Make better short commands,
       // and add the long commands
       if (true) {
           switch (cmd) {
-              case "!weather":
-                  coord = await this.googleMapsApi.getCoordinates(msgContent);
-                  data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-                  msg.reply(
-                      data
-                  );
-                  break;
-              case "!hourly-w":
-                  coord = await this.googleMapsApi.getCoordinates(msgContent);
-                  data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-                  msg.reply(
-                      data
-                  );
-                  break;
-              case "!week-w":
-                  coord = await this.googleMapsApi.getCoordinates(msgContent);
-                  data = await this.darkSkyApi.getEightDayForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
-                  msg.reply(
-                      data
-                  );
-                  break;
-              case "!coord":
-                  msg.reply(
-                      await this.googleMapsApi.getFormattedCoordinates(msgContent)
-                  );
-                  break;
-              case "!shrine":
-                  msg.reply(
-                    await this.dbdApi.getShrine(splitMsgContent)
-                  );
-                  break;
-              case "!spi":
-                  msg.reply(
-                      await this.hirezApi.getPlayerInfo(msgContent)
-                  );
-                  break;
-              case "!sss":
-                  msg.reply(
-                      await this.hirezApi.statusOfServer()
-                  );
-                  break;
-              case "!smotd":
-                  msg.reply(
-                      await this.hirezApi.getMotd()
-                  );
-                  break;
-              case "!sgr":
-                  msg.reply(
-                      await this.hirezApi.getGodKdr(msgContent)
-                  );
-                  break;
-              case "!skda":
-                  msg.reply(
-                      await this.hirezApi.getKdrAcrossAllGods(msgContent)
-                  );
-                  break;
-              case "!sai":
-                  msg.reply(
-                      await this.hirezApi.getPlayerAccount(msgContent)
-                  );
-                  break;
-              case "!sps":
-                  playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
-                  console.log(
-                  //msg.reply(
-                      playerStatus
-                  );
-                  break;
-              case "!sms":
-                  playerStatus = await this.hirezApi.getMatchStatus(msgContent);
-                  //console.log(
-                  msg.reply(
-                      playerStatus
-                  );
-                  break;
-              default:
-                  // do nothing
+            case "!weather":
+              coord = await this.googleMapsApi.getCoordinates(msgContent);
+              alternateDate = msgContent.split("-")[1];
+              data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress,
+                (!alternateDate) ? "" : alternateDate);
+              msg.reply(
+                  data
+              );
+              break;
+            case "!hourly-w":
+              coord = await this.googleMapsApi.getCoordinates(msgContent);
+              data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+              msg.reply(
+                  data
+              );
+              break;
+            case "!week-w":
+              coord = await this.googleMapsApi.getCoordinates(msgContent);
+              data = await this.darkSkyApi.getEightDayForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
+              msg.reply(
+                  data
+              );
+              break;
+            case "!coord":
+              msg.reply(
+                  await this.googleMapsApi.getFormattedCoordinates(msgContent)
+              );
+              break;
+            case "!shrine":
+              msg.reply(
+                await this.dbdApi.getShrine(splitMsgContent)
+              );
+              break;
+            case "!spi":
+              msg.reply(
+                  await this.hirezApi.getPlayerInfo(msgContent)
+              );
+              break;
+            case "!sss":
+              msg.reply(
+                  await this.hirezApi.statusOfServer()
+              );
+              break;
+            case "!smotd":
+              msg.reply(
+                  await this.hirezApi.getMotd()
+              );
+              break;
+            case "!sgr":
+              msg.reply(
+                  await this.hirezApi.getGodKdr(msgContent)
+              );
+              break;
+            case "!skda":
+              msg.reply(
+                  await this.hirezApi.getKdrAcrossAllGods(msgContent)
+              );
+              break;
+            case "!sai":
+              msg.reply(
+                  await this.hirezApi.getPlayerAccount(msgContent)
+              );
+              break;
+            case "!sps":
+              playerStatus = await this.hirezApi.getPlayerStatus(msgContent);
+              console.log(
+              //msg.reply(
+                  playerStatus
+              );
+              break;
+            case "!sms":
+              playerStatus = await this.hirezApi.getMatchStatus(msgContent);
+              //console.log(
+              msg.reply(
+                  playerStatus
+              );
+                break;
+            default:
+                // do nothing
           }
       }
 

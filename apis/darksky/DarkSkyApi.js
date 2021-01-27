@@ -13,8 +13,9 @@ module.exports = class DarkSkyApi {
 	  this.cstOffset = 6;
   }
   
-  async getForecast(latLongStr) {
-	  let uri = this.apiHostname + this.apiKey + "/" + latLongStr;
+	async getForecast(latLongStr, futureDate = "") {
+		futureDate = (futureDate != "") ? "," + futureDate : futureDate;
+		let uri = this.apiHostname + this.apiKey + "/" + latLongStr + futureDate;
 	  try {
 		  const response = await fetch(uri, {
 			  method: this.method,
@@ -29,19 +30,22 @@ module.exports = class DarkSkyApi {
 	}
   }
   
-  async getFormattedForecast(latLongStr, formattedAddress) {
-	const getForecastJson = await this.getForecast(latLongStr);
-	let str = "```ini\n" +
-	  formattedAddress + "\n" +
-		new Date(getForecastJson.currently.time * 1000) + "\n" +
-		"[Summary]".padEnd("12", ' ') + getForecastJson.currently.summary + "\n" +
-		"[Currently]".padEnd("12", ' ') + getForecastJson.currently.temperature + " F\n" +
-		"[Feels Like]".padEnd("12", ' ') + getForecastJson.currently.apparentTemperature + " F\n" +
-		"[High/Low]".padEnd("12", ' ') + getForecastJson.daily.data[0].temperatureHigh + "F / " + getForecastJson.daily.data[0].temperatureLow + " F\n" +
-		"[Precip %]".padEnd("12", ' ') + getForecastJson.currently.precipProbability + "\n" +
-		"[Humidity]".padEnd("12", ' ') + getForecastJson.currently.humidity + "\n" +
-		"[Wind Speed]".padEnd("12", ' ') + getForecastJson.currently.windSpeed + "\n" +
-	  "```";
+	async getFormattedForecast(latLongStr, formattedAddress, alternateDateStr) {
+		const getForecastJson = await this.getForecast(latLongStr,
+			(alternateDateStr != "") ? new Date(alternateDateStr).getTime() / 1000 : "");
+		let str = "```ini\n" +
+			formattedAddress + "\n" +
+			new Date(getForecastJson.currently.time * 1000) + "\n" +
+			"[Summary]".padEnd("12", ' ') + getForecastJson.currently.summary + "\n" +
+			"[Currently]".padEnd("12", ' ') + getForecastJson.currently.temperature + " F\n" +
+			"[Feels Like]".padEnd("12", ' ') + getForecastJson.currently.apparentTemperature + " F\n" +
+			"[High/Low]".padEnd("12", ' ') + getForecastJson.daily.data[0].temperatureHigh + "F / " + getForecastJson.daily.data[0].temperatureLow + " F\n" +
+			"[Precip %]".padEnd("12", ' ') + getForecastJson.currently.precipProbability + "\n" +
+			"[Humidity]".padEnd("12", ' ') + getForecastJson.currently.humidity + "\n" +
+			"[Wind Speed]".padEnd("12", ' ') + getForecastJson.currently.windSpeed + "\n" +
+			"[Sun Rise]".padEnd("12", ' ') + new Date(getForecastJson.daily.data[0].sunriseTime * 1000) + "\n" +
+			"[Sun Set]".padEnd("12", ' ') + new Date(getForecastJson.daily.data[0].sunsetTime * 1000) + "\n" +
+			"```" + "\n" + "Past dates are based on historical data. Future dates are forecasted and may change.";
 	return str;
   }
 
