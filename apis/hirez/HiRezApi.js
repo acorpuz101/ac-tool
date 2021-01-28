@@ -14,6 +14,7 @@ module.exports = class HiRezApi {
 
 	async checkIfSessionIsValid() {
 		const data = await this.baseApiCmds.validateSession();
+		console.log("session-check", data);
 		if (data.toLowerCase().includes("invalid session id")) {
 			this.baseApiCmds.setSessionToNull();
 			console.log("Invalid HiRez Session. Creating new session.");

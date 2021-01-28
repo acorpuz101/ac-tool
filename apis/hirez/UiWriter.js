@@ -5,6 +5,7 @@ module.exports = class HiRezApi {
 		this.API_IS_DOWN_MESSAGE = "The Smite API is down. Hopefully HiRez brings it back up soon.";
 	}
 
+	// TODO: Check implemenation
 	isApiDown(responseJson) {
 		console.log(responseJson);
 		return responseJson.toLowerCase().includes("api is unavailable");
@@ -19,7 +20,7 @@ module.exports = class HiRezApi {
 	}
 
 	async getPlayerInfo(playerInfo) {
-		if (this.isApiDown(playerInfo)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(playerInfo)) return this.API_IS_DOWN_MESSAGE;
 
 		const player = playerInfo[0];
 
@@ -47,7 +48,7 @@ module.exports = class HiRezApi {
 	}
 
 	async getMotd(motd) {
-		if (this.isApiDown(motd)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(motd)) return this.API_IS_DOWN_MESSAGE;
 
 		let todaysDate = new Date();
 
@@ -90,7 +91,7 @@ module.exports = class HiRezApi {
     }
 
 	async getGodKdr(playerName, godRanks) {
-		if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
 
 		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
@@ -108,7 +109,7 @@ module.exports = class HiRezApi {
     }
 
 	async getKdrAcrossAllGods(playerName, godRanks) {
-		if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
 
 		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
@@ -142,7 +143,7 @@ module.exports = class HiRezApi {
 	}
 
 	async getPlayerAccount(playerName, info) {
-		if (this.isApiDown(info)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(info)) return this.API_IS_DOWN_MESSAGE;
 
 		let str = "```\n" + playerName + "\n" +
 			"Player Id: " + info[0].player_id + "\n" +
@@ -154,7 +155,7 @@ module.exports = class HiRezApi {
 
 	// TODO: Add player details. Check private status; might break.
 	async getMatchStatus(info, playerName, eachPlayerInfo) {
-		if (this.isApiDown(info)) return this.API_IS_DOWN_MESSAGE;
+		//if (this.isApiDown(info)) return this.API_IS_DOWN_MESSAGE;
 
 		let str = "```\n" + "Current Match Status for " + playerName + "\n\n";
 		str += "  GodName".padEnd("15", " ") + "\t" + "  PlayerName".padEnd("15", " ") + "\t" + "W:L".padStart("6", " ").padEnd("6", " ") + "\n";
