@@ -6,6 +6,7 @@ module.exports = class HiRezApi {
 	}
 
 	isApiDown(responseJson) {
+		console.log(responseJson);
 		return responseJson.toLowerCase().includes("api is unavailable");
 	}
 
