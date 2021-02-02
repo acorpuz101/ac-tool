@@ -123,7 +123,7 @@ module.exports = class DiscordWriter {
 			.setTitle(`Language Detection`)
 			.addFields(
 				{ name: "Input Text", value: `${data.text}` },
-				{ name: "Language", value: `${data.language}` }
+				{ name: "Language", value: `${data.language}` },
 				{ name: "Confidence", value: `${data.confidence}` }
 			)
 			.setTimestamp()
