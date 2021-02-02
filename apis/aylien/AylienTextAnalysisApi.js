@@ -48,4 +48,32 @@ module.exports = class AylienTextAnalysisApi {
 		}
 	}
 
+	async analyzeSentiment(inputString) {
+		try {
+			let uri = "https://aylien-text.p.rapidapi.com/sentiment?text=" + inputString;
+			const response = await fetch(uri, {
+				method: "GET",
+				headers: this.headers
+			});
+			return await response.json();
+		} catch (e) {
+			console.log('def err', e);
+			return e;
+		}
+	}
+
+	async suggestHashtags(inputString) {
+		try {
+			let uri = "https://aylien-text.p.rapidapi.com/hashtags?text=" + inputString;
+			const response = await fetch(uri, {
+				method: "GET",
+				headers: this.headers
+			});
+			return await response.json();
+		} catch (e) {
+			console.log('def err', e);
+			return e;
+		}
+	}
+
 }

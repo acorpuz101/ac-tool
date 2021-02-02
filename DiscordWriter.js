@@ -75,5 +75,45 @@ module.exports = class DiscordWriter {
 		exampleEmbed.setDescription(description);
 
 		return exampleEmbed;
+	}
+
+	presentAylienSentimentAnalysis(data) {
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor('#008061')
+			.setTitle(`Sentiment Analysis`)
+			.addFields(
+				{ name: "Polarity", value: `${data.polarity}` },
+				{ name: "Polarity Confidence", value: `${data.polarity_confidence}` },
+				{ name: "Subjectivity", value: `${data.subjectivity}` },
+				{ name: "Subjective Confidence", value: `${data.subjectivity_confidence}` },
+				{ name: "Text Analyzed", value: `${data.text}` }
+			)
+			.setTimestamp()
+			.setFooter(`Aylien Text Analysis API`);
+
+		return exampleEmbed;
+  }
+
+	presentHashtagSuggestion(data) {
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor('#008061')
+			.setTitle(`Sentiment Analysis`)
+			.addFields(
+				{ name: "Text Analyzed", value: `${data.text}` },
+				{ name: "Language", value: `${data.language}` }
+			)
+			.setTimestamp()
+			.setFooter(`Aylien Text Analysis API`);
+
+		let hashtags = "";
+		for (let i = 0; i < data.hashtags.length; i++) {
+			hashtags += data.hashtags[i] + "\n";
+		}
+
+		exampleEmbed.addFields(
+			{ name: "Hashtag Suggestion", value: `${hashtags}` }
+		)
+
+		return exampleEmbed;
   }
 }
