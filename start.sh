@@ -1,1 +1,2 @@
-node app.js >> ./logs.log &
+exec node app.js >> ./logs.log &
+echo "kill $!" > shutdown.sh
