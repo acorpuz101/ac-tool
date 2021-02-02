@@ -116,4 +116,19 @@ module.exports = class DiscordWriter {
 
 		return exampleEmbed;
   }
+
+	presentLanguageDetection(data) {
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor('#008061')
+			.setTitle(`Language Detection`)
+			.addFields(
+				{ name: "Input Text", value: `${data.text}` },
+				{ name: "Language", value: `${data.language}` }
+				{ name: "Confidence", value: `${data.confidence}` }
+			)
+			.setTimestamp()
+			.setFooter(`Aylien Text Analysis API`);
+
+		return exampleEmbed;
+  }
 }

@@ -101,6 +101,13 @@ module.exports = class BotResponse {
               this.dcWriter.presentAylienSentimentAnalysis(data, uri)
               );
           break;
+        case "!detect-language":
+            phrase = msgContent.replace(/[^a-zA-Z ]/g, "").split(" ").slice(1).join("+");
+            data = await this.aylienApi.detectLanguage(phrase);
+            msg.reply(
+              this.dcWriter.presentLanguageDetection(data, uri)
+              );
+          break;
         case "!hashtag-suggestion":
             phrase = msgContent.replace(/[^a-zA-Z ]/g, "").split(" ").slice(1).join("+");
             data = await this.aylienApi.suggestHashtags(phrase);

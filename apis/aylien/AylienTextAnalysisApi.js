@@ -76,4 +76,18 @@ module.exports = class AylienTextAnalysisApi {
 		}
 	}
 
+	async detectLanguage(inputString) {
+		try {
+			let uri = "https://aylien-text.p.rapidapi.com/language?text=" + inputString;
+			const response = await fetch(uri, {
+				method: "GET",
+				headers: this.headers
+			});
+			return await response.json();
+		} catch (e) {
+			console.log('def err', e);
+			return e;
+		}
+	}
+
 }
