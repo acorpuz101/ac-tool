@@ -108,7 +108,7 @@ module.exports = class BotResponse {
               this.dcWriter.presentHashtagSuggestion(data, uri)
               );
           break;
-        /*case "!hourly-w":
+        case "!hourly-w":
           coord = await this.googleMapsApi.getCoordinates(msgContent);
           data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
           msg.reply(
@@ -175,15 +175,15 @@ module.exports = class BotResponse {
           msg.reply(
               playerStatus
           );
-            break;*/
+            break;
         default:
-          console.log("default");
+          //console.log("default");
       }
     }
 
     // Keep IF/ELSE for the 'includes' logic
 
-    /*if (msgContent === '!ping') {
+    if (msgContent === '!ping') {
         msg.reply("ping\tping\tping\nping");
     }
     else if (msgContent.includes("https://tpwd.texas.gov/state-parks/")) {
@@ -191,6 +191,6 @@ module.exports = class BotResponse {
       msg.reply(
         await this.scraper.scrapeParkInfo(msgContent)
       );
-    }*/
+    }
   }
 }
