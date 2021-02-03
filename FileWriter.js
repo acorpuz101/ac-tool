@@ -11,6 +11,7 @@
 const fs = require("fs");
 const fsp = require("fs").promises;
 const path = require("path");
+const moment = require("moment");
 
 module.exports = class FileWriter {
   constructor() {
@@ -24,13 +25,16 @@ module.exports = class FileWriter {
   }
 
   async createFileForArticle(data) {
-    const nameOfFile = "testArticle.html";
+    const articleTitle = data.title;
+    const articleAuthor = data.author;
+
+    const nameOfFile = `${moment().format("HH-mm-ss")}-${articleTitle.split(" ").slice(0,5).join("_")}.html`;
     const filePath = path.join(this.targetDir, nameOfFile);
 
     const templateData = await this.getTemplateData();
     let articleData = templateData.replace(/REPLACE_BODY/, "<p>" + data.article.replace(/(\n\n)/gim, "</p><p>"));
-    articleData = articleData.replace(/REPLACE_TITLE/, data.title);
-    articleData = articleData.replace(/REPLACE_AUTHOR/, data.author);
+    articleData = articleData.replace(/REPLACE_TITLE/, articleTitle);
+    articleData = articleData.replace(/REPLACE_AUTHOR/, articleAuthor);
     articleData = articleData.replace(/REPLACE_PUBLISH_DATE/, data.publishDate);
 
     await fs.writeFile(

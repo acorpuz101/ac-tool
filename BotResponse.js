@@ -7,6 +7,9 @@ const Scraper = require('./scraper/Scraper');
 const TwinWordApi = require('./apis/twinword/TwinWordApi');
 const AylienApi = require('./apis/aylien/AylienTextAnalysisApi');
 const DiscordWriter = require('./DiscordWriter');
+const FileWriter = require('./FileWriter');
+const moment = require("moment");
+const Discord = require('discord.js');
 
 const ADRIANS_ID = '179314473088188417';
 const ANNAS_ID = '181522225835409408';
@@ -26,6 +29,9 @@ module.exports = class BotResponse {
     this.twinWordApi = new TwinWordApi();
     this.aylienApi = new AylienApi();
     this.dcWriter = new DiscordWriter();
+    this.fileWriter = new FileWriter();
+
+    this.isDev = false; // TODO: Make this config
     this.init();
   }
 
@@ -57,10 +63,25 @@ module.exports = class BotResponse {
     let coord, alternateDate = "", data, playerStatus, word, phrase, uri;
 
 
-    console.log("cmd", cmd);
+    console.log(moment().format("MM/DD/YY HH:mm:ss"), cmd);
     // TODO: Make better short commands,
     // and add the long commands
-    if (true) {
+
+    if (this.isDev) {
+      switch (cmd) {
+        case "!article-extract":
+          uri = msgContent.split(" ")[1];
+          data = await this.aylienApi.extractArticle(uri);
+          const filePath = await this.fileWriter.createFileForArticle(data);
+          msg.channel.send(
+            `${data.title} by ${data.author}`,
+            { files: [filePath] }
+          );
+          break;
+        default:
+          console.log("default")
+      }
+    } else {
       switch (cmd) {
         case "!def":
           word = msgContent.split(" ")[1];
@@ -81,18 +102,21 @@ module.exports = class BotResponse {
           }
           break;
         case "!article-extract":
-            uri = msgContent.split(" ")[1];
-            data = await this.aylienApi.extractArticle(uri);
-            //msg.reply(
-            //  this.dcWriter.presentSentimentAnalysis(data, phrase)
-            //);
+          uri = msgContent.split(" ")[1];
+          data = await this.aylienApi.extractArticle(uri);
+          const filePath = await this.fileWriter.createFileForArticle(data);
+          msg.channel.send(
+            `${data.title} by ${data.author}`,
+            { files: [filePath] }
+          );
           break;
         case "!article-summary":
             uri = msgContent.split(" ")[1];
             data = await this.aylienApi.summarizeArticle(uri);
+            //message.channel.send(new Discord.Attachment('./emojis/killerbean.png', 'killerbean.png'))
             msg.reply(
               this.dcWriter.presentArticleSummary(data, uri)
-              );
+            );
             break;
         case "!analyze-sentiment":
             phrase = msgContent.replace(/[^a-zA-Z ]/g, "").split(" ").slice(1).join("+");
@@ -115,6 +139,13 @@ module.exports = class BotResponse {
               this.dcWriter.presentHashtagSuggestion(data, uri)
               );
           break;
+        case "!weather":
+           coord = await this.googleMapsApi.getCoordinates(msgContent);
+           alternateDate = msgContent.split("-")[1];
+           data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress, (!alternateDate) ? "" : alternateDate);
+           msg.reply(
+             data
+           );
         case "!hourly-w":
           coord = await this.googleMapsApi.getCoordinates(msgContent);
           data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
