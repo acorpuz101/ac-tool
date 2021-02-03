@@ -6,6 +6,7 @@ const HiRezApi = require('./apis/hirez/HiRezApi');
 const Scraper = require('./scraper/Scraper');
 const TwinWordApi = require('./apis/twinword/TwinWordApi');
 const AylienApi = require('./apis/aylien/AylienTextAnalysisApi');
+const LinguaToolsApi = require('./apis/linguatools/LinguaToolsApi');
 const DiscordWriter = require('./DiscordWriter');
 const FileWriter = require('./FileWriter');
 const moment = require("moment");
@@ -30,6 +31,7 @@ module.exports = class BotResponse {
     this.aylienApi = new AylienApi();
     this.dcWriter = new DiscordWriter();
     this.fileWriter = new FileWriter();
+    this.linguaTools = new LinguaToolsApi();
 
     this.isDev = false; // TODO: Make this config
     this.init();
@@ -69,15 +71,6 @@ module.exports = class BotResponse {
 
     if (this.isDev) {
       switch (cmd) {
-        case "!article-extract":
-          uri = msgContent.split(" ")[1];
-          data = await this.aylienApi.extractArticle(uri);
-          const filePath = await this.fileWriter.createFileForArticle(data);
-          msg.channel.send(
-            `${data.title} by ${data.author}`,
-            { files: [filePath] }
-          );
-          break;
         default:
           console.log("default")
       }
@@ -98,6 +91,19 @@ module.exports = class BotResponse {
             data = await this.twinWordApi.getSentimentAnalysis(phrase);
             msg.reply(
               this.dcWriter.presentSentimentAnalysis(data, phrase)
+            );
+          }
+          break;
+        case "!translate":
+          if (splitMsgContent.length != 3) {
+            msg.reply(this.dcWriter.presentInvalidTranslateCommand());
+            return;
+          } else {
+            const word = splitMsgContent[1];
+            const langPair = splitMsgContent[2];
+            const data = await this.linguaTools.translateWord(word, langPair);
+            msg.reply(
+              this.dcWriter.presentTranslation(data, word, langPair)
             );
           }
           break;
