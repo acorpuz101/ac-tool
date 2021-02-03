@@ -34,7 +34,7 @@ module.exports = class FileWriter {
     const articleTitle = data.title;
     const articleAuthor = data.author;
 
-    const nameOfFile = `${moment().format("HH-mm-ss")}-${articleTitle.split(" ").slice(0,5).join("_")}.html`;
+    const nameOfFile = `${moment().format("HH-mm-ss")}-${articleTitle.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '').split(" ").slice(0,5).join("_")}.html`;
     const filePath = path.join(this.targetDir, nameOfFile);
 
     const templateData = await this.getTemplateData();
