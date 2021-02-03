@@ -17,7 +17,8 @@ module.exports = class DbdApi {
 			  headers: this.headers
 		  });
 		  return await response.json();
-	  } catch (e) {
+		} catch (e) {
+			console.log(e);
 		  return e;
 	}
   }
@@ -25,11 +26,16 @@ module.exports = class DbdApi {
 	async getShrine(splitMsg) {
 		this.endpoint = "/api/shrineofsecrets";
 		const data = await this.getDbdApiRequest();
-		const perkData = await this.getPerks();
 
-		const detailedArgExists = (splitMsg[1] == "-d");
+		if (!data.code) {
+			const perkData = await this.getPerks();
 
-		return (detailedArgExists) ? this.createShrineEmbed(data, perkData) : this.createShrineText(data);
+			const detailedArgExists = (splitMsg[1] == "-d");
+
+			return (detailedArgExists) ? this.createShrineEmbed(data, perkData) : this.createShrineText(data);
+		} else {
+			return `The Dead by Daylight API seems to be down: ${data.code}`;
+    }
 	}
 
 	async getPerks() {
