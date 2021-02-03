@@ -140,12 +140,13 @@ module.exports = class BotResponse {
               );
           break;
         case "!weather":
-           coord = await this.googleMapsApi.getCoordinates(msgContent);
-           alternateDate = msgContent.split("-")[1];
-           data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress, (!alternateDate) ? "" : alternateDate);
-           msg.reply(
-             data
-           );
+          coord = await this.googleMapsApi.getCoordinates(msgContent);
+          alternateDate = msgContent.split("-")[1];
+          data = await this.darkSkyApi.getFormattedForecast(coord.lat + "," + coord.lng, coord.formattedAddress, (!alternateDate) ? "" : alternateDate);
+          msg.reply(
+            data
+          );
+          break;
         case "!hourly-w":
           coord = await this.googleMapsApi.getCoordinates(msgContent);
           data = await this.darkSkyApi.getHourlyForecast(coord.lat + "," + coord.lng, coord.formattedAddress);
