@@ -12,7 +12,20 @@ const Discord = require('discord.js');
 
 module.exports = class DiscordWriter {
   constructor() {
-
+		this.LINGUA_TOOLS_LANGPAIRS = [
+			"de-en",
+			"de-es",
+			"de-nl",
+			"de-pl",
+			"de-it",
+			"de-cs",
+			"en-de",
+			"es-de",
+			"nl-de",
+			"pl-de",
+			"it-de",
+			"cs-de"
+			]
   }
 
 	presentDefinition(defData) {
@@ -130,5 +143,32 @@ module.exports = class DiscordWriter {
 			.setFooter(`Aylien Text Analysis API`);
 
 		return exampleEmbed;
-  }
+	}
+
+	presentTranslation(data, inputWord, langPair) {
+		console.log(data);
+		const exampleEmbed = new Discord.MessageEmbed()
+			.setColor('#008061')
+			.setTitle(`${inputWord}\t\t(${langPair.toUpperCase()})`)
+			.setTimestamp()
+			.setFooter(`LinguaTools API`);
+
+		for (let i = 0; i < data.length; i++) {
+			exampleEmbed.addFields({ name: `${data[i].l2_text}`, value: `${data[i].wortart}\nSynonyms\n${data[i].synonyme1}\n${data[i].synonyme2}` });
+		}
+
+		return exampleEmbed;
+	}
+
+	presentInvalidTranslateCommand() {
+		let str = "Invalid number of inputs." + "\n\n Command Format```!translate [single-word] [language-pair]```\n" +
+			"Example Cmd" +
+			" ```!translate hello de-pl```\n" +
+			"Valid Language Pairs\n" + "```";
+		for (let i = 0; i < this.LINGUA_TOOLS_LANGPAIRS.length; i++) {
+			str += `${this.LINGUA_TOOLS_LANGPAIRS[i]}${(i == 5) ? '\n' : '\t'}`;
+		}
+		str += "\n```";
+		return str;
+	}
 }
