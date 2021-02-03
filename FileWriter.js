@@ -16,12 +16,18 @@ const moment = require("moment");
 module.exports = class FileWriter {
   constructor() {
     this.targetDir = path.join(__dirname, "generatedFiles");
-    this.articleTemplate = path.join(__dirname, "generatedFiles", "templateArticle.html");
+    this.articleTemplate = path.join(__dirname, "templates", "templateArticle.html");
   }
 
   async getTemplateData() {
     const data = await fsp.readFile(this.articleTemplate, 'binary');
     return new Buffer(data).toString();
+  }
+
+  checkDirToMake(dir) {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
   }
 
   async createFileForArticle(data) {
@@ -36,6 +42,8 @@ module.exports = class FileWriter {
     articleData = articleData.replace(/REPLACE_TITLE/, articleTitle);
     articleData = articleData.replace(/REPLACE_AUTHOR/, articleAuthor);
     articleData = articleData.replace(/REPLACE_PUBLISH_DATE/, data.publishDate);
+
+    this.checkDirToMake(this.targetDir);
 
     await fs.writeFile(
       filePath,
