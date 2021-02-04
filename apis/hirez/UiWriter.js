@@ -13,7 +13,11 @@ module.exports = class HiRezApi {
 
 	generatePrivateString(playerName) {
 		return "Player '" + playerName + "' profile is private"
-    }
+	}
+
+	generateNoDataFoundMessage(playerName) {
+		return `No data found for ${playerName}`;
+  }
 
 	createTimestamp() {
 		return this.baseApiCmds.createTimestamp();
@@ -21,7 +25,6 @@ module.exports = class HiRezApi {
 
 	async getPlayerInfo(playerInfo) {
 		//if (this.isApiDown(playerInfo)) return this.API_IS_DOWN_MESSAGE;
-
 		const player = playerInfo[0];
 
 		const playerWins = player.Wins;
@@ -93,53 +96,60 @@ module.exports = class HiRezApi {
 	async getGodKdr(playerName, godRanks) {
 		//if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
 
-		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
-		let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
+		if (godRanks.length > 0 || godRanks.isPrivate != undefined) {
+			if (godRanks.isPrivate) return this.generatePrivateString(playerName);
+			let str = "```\n" + "God".padEnd("12", " ") + "\tKDA".padEnd("12", " ") + "\tWins/Lossses\n";
 
-		const dataLength = 10;
-		for (let i = 0; i < dataLength; i++) {
-			const godData = godRanks[i];
-			const kda = godData.Kills.toString() + "/" + godData.Deaths.toString() + "/" + godData.Assists.toString();
-			const wl = godData.Wins.toString() + " : " + godData.Losses.toString();
-			str += godData.god.padEnd("12", " ") + "\t" + kda.padEnd("12", " ") + "\t" + wl + "\n";
-        }
-		str += "```"
-
-		return str;
-    }
+			const dataLength = 10;
+			for (let i = 0; i < dataLength; i++) {
+				const godData = godRanks[i];
+				const kda = godData.Kills.toString() + "/" + godData.Deaths.toString() + "/" + godData.Assists.toString();
+				const wl = godData.Wins.toString() + " : " + godData.Losses.toString();
+				str += godData.god.padEnd("12", " ") + "\t" + kda.padEnd("12", " ") + "\t" + wl + "\n";
+			}
+			str += "```"
+			return str;
+		} else {
+			return this.generateNoDataFoundMessage(playerName);
+		}
+	}
 
 	async getKdrAcrossAllGods(playerName, godRanks) {
 		//if (this.isApiDown(godRanks)) return this.API_IS_DOWN_MESSAGE;
 
-		if (godRanks.isPrivate) return this.generatePrivateString(playerName);
+		if (godRanks.length > 0 || godRanks.isPrivate != undefined) {
+			if (godRanks.isPrivate) return this.generatePrivateString(playerName);
 
-		let godKill = 0;
-		let godDeath = 0;
-		let godAssist = 0;
-		let godWin = 0;
-		let godLosses = 0;
-		for (let i = 0; i < godRanks.length; i++) {
-			let god = godRanks[i];
-			godKill += god.Kills;
-			godDeath += god.Deaths;
-			godAssist += god.Assists;
-			godWin += god.Wins;
-			godLosses += god.Losses;
-		}
+			let godKill = 0;
+			let godDeath = 0;
+			let godAssist = 0;
+			let godWin = 0;
+			let godLosses = 0;
+			for (let i = 0; i < godRanks.length; i++) {
+				let god = godRanks[i];
+				godKill += god.Kills;
+				godDeath += god.Deaths;
+				godAssist += god.Assists;
+				godWin += god.Wins;
+				godLosses += god.Losses;
+			}
 
-		let kdar = (godKill + godAssist) / godDeath;
-		let kdr = (godKill / godDeath);
-		let wl = (godWin / godLosses);
+			let kdar = (godKill + godAssist) / godDeath;
+			let kdr = (godKill / godDeath);
+			let wl = (godWin / godLosses);
 
-		const kda = "```\n" + playerName + "\n\nK / D / A\n"
-			+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n\n"
-			+ "K/D: " + kdr.toFixed(2).toString() + "\n"
-			+ "K/D/A: " + kdar.toFixed(2).toString() + "\n\n"
-			+ "Wins / Losses\n" + godWin.toString() + " / " + godLosses.toString() + "\n\n"
-			+ "W/L: " + wl.toFixed(2).toString() + "\n"
-			+ "```";
+			const kda = "```\n" + playerName + "\n\nK / D / A\n"
+				+ godKill.toString() + " / " + godDeath.toString() + " / " + godAssist.toString() + "\n\n"
+				+ "K/D: " + kdr.toFixed(2).toString() + "\n"
+				+ "K/D/A: " + kdar.toFixed(2).toString() + "\n\n"
+				+ "Wins / Losses\n" + godWin.toString() + " / " + godLosses.toString() + "\n\n"
+				+ "W/L: " + wl.toFixed(2).toString() + "\n"
+				+ "```";
 
-		return kda;
+			return kda;
+		} else {
+			return this.generateNoDataFoundMessage(playerName);
+    }
 	}
 
 	async getPlayerAccount(playerName, info) {
