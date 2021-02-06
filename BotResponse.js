@@ -20,6 +20,9 @@ const TARGET_CHANNELS = 'test,bot-cmds,camping';
 let tagObj = {};
 let regex = /[#]\w*/g;
 
+
+const fetch = require("node-fetch");
+
 module.exports = class BotResponse {
   constructor() {
     this.dbdApi = new DbdApi();
@@ -62,7 +65,7 @@ module.exports = class BotResponse {
     let cmd = splitMsgContent[0];
 
     // Initialize variables to be used in the switch
-    let coord, alternateDate = "", data, playerStatus, word, phrase, uri;
+    let coord, alternateDate = "", data, playerStatus, word, phrase, uri, res, url, params, firstResult;
 
 
     console.log(moment().format("MM/DD/YY HH:mm:ss"), cmd);
@@ -71,11 +74,70 @@ module.exports = class BotResponse {
 
     if (this.isDev) {
       switch (cmd) {
+        case "!new":
+          url = new URL("http://localhost:3002/detectlanguage");
+          params = { query: "Versicherung" };
+          url.search = new URLSearchParams(params).toString();
+          res = await fetch(url);
+          console.log(await res.json());
+          break;
+        case "!npi-name":
+          const firstName = splitMsgContent[1];
+          const lastName = splitMsgContent[2];
+          url = new URL("http://192.168.0.101:3904/searchName");
+          params = {
+            firstname: firstName,
+            lastname: lastName
+          };
+          url.search = new URLSearchParams(params).toString();
+          res = await fetch(url);
+          data = await res.json();
+          console.log(data);
+          
+
+          if (data.result_count > 0) {
+            firstResult = data.results[0];
+            msg.reply(
+              `${firstResult.basic.first_name} ${firstResult.basic.last_name} - ${firstResult.basic.gender}\n` +
+              `NPI:\t${firstResult.number}\n` +
+              `Specialty:\t${firstResult.taxonomies[0].desc}`
+            )
+          } else {
+            msg.reply("No Provider Found");
+          }
+
+          break;
         default:
           console.log("default")
       }
     } else {
       switch (cmd) {
+        // TODO: FIX THIS SHIT
+        case "!npi-name":
+          const firstName = splitMsgContent[1];
+          const lastName = splitMsgContent[2];
+          url = new URL("http://localhost:3904/searchName");
+          params = {
+            firstname: firstName,
+            lastname: lastName
+          };
+          url.search = new URLSearchParams(params).toString();
+          res = await fetch(url);
+          data = await res.json();
+          console.log(data);
+
+
+          if (data.result_count > 0) {
+            firstResult = data.results[0];
+            msg.reply(
+              `${firstResult.basic.first_name} ${firstResult.basic.last_name} - ${firstResult.basic.gender}\n` +
+              `NPI:\t${firstResult.number}\n` +
+              `Specialty:\t${firstResult.taxonomies[0].desc}`
+            )
+          } else {
+            msg.reply("No Provider Found");
+          }
+          break;
         case "!def":
           word = msgContent.split(" ")[1];
           data = await this.twinWordApi.getDefinition(word);
