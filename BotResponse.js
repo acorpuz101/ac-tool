@@ -41,7 +41,8 @@ module.exports = class BotResponse {
   }
 
   async init() {
-    await this.hirezApi.baseApiCmds.createSession();
+    // TODO: Breaks when ETIMEDOUT
+    // await this.hirezApi.baseApiCmds.createSession();
   }
 
   async routeMessage(msg) {
@@ -53,7 +54,8 @@ module.exports = class BotResponse {
 
     // Check if HiRez session is valid
     // TODO: When invaid, get a new session
-    await this.hirezApi.checkIfSessionIsValid();
+    // TODO: Breaks when ETIMEDOUT
+    // await this.hirezApi.checkIfSessionIsValid();
 
     // Get the message content
     let msgContent = msg.content;
@@ -93,7 +95,7 @@ module.exports = class BotResponse {
           res = await fetch(url);
           data = await res.json();
           console.log(data);
-          
+
 
           if (data.result_count > 0) {
             firstResult = data.results[0];
